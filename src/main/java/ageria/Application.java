@@ -1,5 +1,7 @@
 package ageria;
 
+import ageria.DAO.AbbonamentoDAO;
+import ageria.DAO.BigliettoDAO;
 import ageria.DAO.PuntodiEmissioneDAO;
 import ageria.entities.PuntodiEmissione;
 import jakarta.persistence.EntityManager;
@@ -14,6 +16,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         EntityManager em = emf.createEntityManager();
         //qui mettiamo i DAO
         PuntodiEmissioneDAO peD=new PuntodiEmissioneDAO(em);
+        AbbonamentoDAO abbD=new AbbonamentoDAO(em);
+        BigliettoDAO bigD=new BigliettoDAO(em);
 
 
         //qui cominciamo con lo scanner
