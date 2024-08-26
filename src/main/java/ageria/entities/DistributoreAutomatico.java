@@ -2,11 +2,12 @@ package ageria.entities;
 
 import ageria.enums.StateTypeMezzo;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="distributore_automatico")
+@DiscriminatorValue("distributore_automatico")
 public class DistributoreAutomatico extends PuntodiEmissione{
 @Column(name = "tipo_mezzo")
     private StateTypeMezzo tipo;

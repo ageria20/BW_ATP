@@ -30,7 +30,7 @@ public class Mezzo {
     @Column (name = "biglietti_validati")
     private int bigliettiValidati;
 
-    @OneToMany(mappedBy = "percorsi_effettuati")
+    @OneToMany(mappedBy = "mezzo")
     private List<PercorsoEffettuato> percorsiEffettuati;
 
     @OneToMany(mappedBy = "mezzo")
