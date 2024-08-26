@@ -25,4 +25,65 @@ public class Tratta {
 
     @OneToMany(mappedBy = "tratta_assegnata")
     private List<Mezzo> mezziAssegnati;
+
+    public Tratta() {
+    }
+
+    public Tratta(String zonaDiPartenza, String capolinea, Timestamp tempoPrevisto, List<Mezzo> mezziAssegnati) {
+        this.zonaDiPartenza = zonaDiPartenza;
+        this.capolinea = capolinea;
+        this.tempoPrevisto = tempoPrevisto;
+        this.mezziAssegnati = mezziAssegnati;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getZonaDiPartenza() {
+        return zonaDiPartenza;
+    }
+
+    public void setZonaDiPartenza(String zonaDiPartenza) {
+        this.zonaDiPartenza = zonaDiPartenza;
+    }
+
+    public String getCapolinea() {
+        return capolinea;
+    }
+
+    public void setCapolinea(String capolinea) {
+        this.capolinea = capolinea;
+    }
+
+    public Timestamp getTempoPrevisto() {
+        return tempoPrevisto;
+    }
+
+    public void setTempoPrevisto(Timestamp tempoPrevisto) {
+        this.tempoPrevisto = tempoPrevisto;
+    }
+
+    public List<Mezzo> getMezziAssegnati() {
+        return mezziAssegnati;
+    }
+
+    public void setMezziAssegnati(List<Mezzo> mezziAssegnati) {
+        this.mezziAssegnati = mezziAssegnati;
+    }
+
+    @Override
+    public String toString() {
+        return "Tratta{" +
+                "id=" + id +
+                ", zonaDiPartenza='" + zonaDiPartenza + '\'' +
+                ", capolinea='" + capolinea + '\'' +
+                ", tempoPrevisto=" + tempoPrevisto +
+                ", mezziAssegnati=" + mezziAssegnati +
+                '}';
+    }
 }
