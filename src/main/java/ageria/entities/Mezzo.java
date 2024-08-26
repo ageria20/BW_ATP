@@ -37,6 +37,9 @@ public class Mezzo {
     @JoinColumn(name="tratta_assegnata")
     private Tratta trattaAssegnata;
 
+    @OneToMany(mappedBy = "mezzo")
+    private List<Biglietto> bigliettiVidimati;
+
     public Mezzo() {
     }
 
