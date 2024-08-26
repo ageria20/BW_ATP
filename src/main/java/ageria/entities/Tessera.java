@@ -1,36 +1,37 @@
 package ageria.entities;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "tessera")
 public class Tessera {
+    @Id
+    @GeneratedValue
     private long id;
+    @Column(name = "data_emissione")
     private LocalDate data_emissione;
-    private LocalDate data_scandenza;
+    @Column(name = "data_scadenza")
+    private LocalDate data_scadenza;
+
     private int nBiglietti;
     private int abbonamenti;
 
     public Tessera(){}
 
-    public Tessera(long id, LocalDate data_emissione, LocalDate data_scandenza, int nBiglietti, int abbonamenti) {
-        this.id = id;
+    public Tessera( LocalDate data_emissione) {
         this.data_emissione = data_emissione;
-        this.data_scandenza = data_scandenza;
-        this.nBiglietti = nBiglietti;
-        this.abbonamenti = abbonamenti;
+        this.data_scadenza=calcolaDataScadenzaTessera();
     }
 
+    public LocalDate calcolaDataScadenzaTessera(){
+        return data_emissione.plusYears(1);
+    }
     //Getter & Setters
-
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public LocalDate getData_emissione() {
@@ -41,12 +42,8 @@ public class Tessera {
         this.data_emissione = data_emissione;
     }
 
-    public LocalDate getData_scandenza() {
-        return data_scandenza;
-    }
-
-    public void setData_scandenza(LocalDate data_scandenza) {
-        this.data_scandenza = data_scandenza;
+    public LocalDate getData_scadenza() {
+        return data_scadenza;
     }
 
     public int getnBiglietti() {
@@ -70,7 +67,7 @@ public class Tessera {
         return "Tessera{" +
                 "id=" + id +
                 ", data_emissione=" + data_emissione +
-                ", data_scandenza=" + data_scandenza +
+                ", data_scadenza=" + data_scadenza +
                 ", nBiglietti=" + nBiglietti +
                 ", abbonamenti=" + abbonamenti +
                 '}';
