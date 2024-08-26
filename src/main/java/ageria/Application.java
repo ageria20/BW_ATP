@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class Application {
 private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
+    private static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
         EntityManager em = emf.createEntityManager();
         //qui mettiamo i DAO
@@ -28,7 +29,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         UtenteDAO utenteDAO=new UtenteDAO(em);
 
         //qui cominciamo con lo scanner
-        Scanner scanner=new Scanner(System.in);
+
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 se sei un utente");
@@ -56,6 +57,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                         try {
                             sceltaUtente = scanner.nextInt();
                             scanner.nextLine();
+                            if(sceltaUtente == -1) break;
                         } catch (InputMismatchException e) {
                             System.out.println("Inserisci un numero valido!");
                             scanner.nextLine();
@@ -157,6 +159,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("TUTTO OK!");
             em.close();
             emf.close();
+        }
+     }
+
+     public static void creazioneElementoAdmin(int scelta){
+        while(true){
+            System.out.println("Premi 1 per inserire un nuovo Mezzo");
+            System.out.println("Premi 2 per inserire un nuovo Punto di Emissione");
+            System.out.println("Premi 3 per inserire un nuova Tratta");
+            System.out.println("Premi 4 per creare un nuova Tessera");
+            System.out.println("Premi 5 per creare un nuovo Abbonamento");
+            System.out.println("Premi 6 per creare un nuovo Biglietto");
+            System.out.println("Premi 0 per USCIRE");
+            System.out.print("Scegli un'opzione: ");
+            try{
+                scelta = scanner.nextInt();
+                scanner.nextLine();
+            }catch(InputMismatchException ex){
+                System.out.println("Inserisci un numero valido");
+            }
+           
+
         }
      }
     }
