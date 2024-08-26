@@ -17,8 +17,8 @@ public abstract class PuntodiEmissione {
    @OneToMany(mappedBy = "puntoEmissione")
     protected Abbonamento abbonamentiEmessi;
 
-    public PuntodiEmissione(long id, String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi) {
-        this.id = id;
+    public PuntodiEmissione(String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi) {
+
         this.nome = nome;
         this.indirizzo = indirizzo;
         this.bigliettiEmessi = bigliettiEmessi;

@@ -1,13 +1,19 @@
 package ageria.entities;
 
 import ageria.enums.StateTypeMezzo;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name="distributore_automatico")
 public class DistributoreAutomatico extends PuntodiEmissione{
-    private StateTypeMezzo stato;
+@Column(name = "tipo_mezzo")
+    private StateTypeMezzo tipo;
 
-    public DistributoreAutomatico(long id, String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, StateTypeMezzo stato) {
-        super(id, nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
-        this.stato = stato;
+    public DistributoreAutomatico( String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, StateTypeMezzo tipo) {
+        super(nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
+        this.tipo = tipo;
     }
 
     public DistributoreAutomatico() {
@@ -15,17 +21,17 @@ public class DistributoreAutomatico extends PuntodiEmissione{
     }
 
     public StateTypeMezzo getStato() {
-        return stato;
+        return tipo;
     }
 
-    public void setStato(StateTypeMezzo stato) {
-        this.stato = stato;
+    public void setStato(StateTypeMezzo tipo) {
+        this.tipo = tipo;
     }
 
     @Override
     public String toString() {
         return "DistributoreAutomatico{"+super.toString() +
-                "stato=" + stato +
+                "stato=" + tipo +
                 "} " ;
     }
 }

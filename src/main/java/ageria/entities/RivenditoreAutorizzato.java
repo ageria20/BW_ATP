@@ -1,12 +1,17 @@
 package ageria.entities;
 
 import ageria.enums.RivenditoreType;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+@Entity
+@Table(name="rivenditore_autorizzato")
 public class RivenditoreAutorizzato extends PuntodiEmissione {
+    @Column(name = "tipo_rivenditore")
     private RivenditoreType tipo;
 
-    public RivenditoreAutorizzato(long id, String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, RivenditoreType tipo) {
-        super(id, nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
+    public RivenditoreAutorizzato(String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, RivenditoreType tipo) {
+        super(nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
         this.tipo = tipo;
     }
 
