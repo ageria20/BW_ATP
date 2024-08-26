@@ -3,6 +3,7 @@ package ageria;
 import ageria.DAO.*;
 import ageria.entities.Mezzo;
 import ageria.entities.PuntodiEmissione;
+import ageria.entities.Tessera;
 import ageria.entities.Utente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -49,7 +50,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     while (true){
                         System.out.println("------------------------------------------------------");
                         System.out.println("Premi 1 per creare un nuovo utente");
-                        System.out.println("Premi 2 se hai già un ID utente");
+                        System.out.println("Premi 2 se hai già un ID utente e creare la tua tessera PERSONALE");
                         System.out.println("Premi 0 per USCIRE");
                         System.out.print("Scegli un'opzione: ");
                         int sceltaUtente = -1;
@@ -81,10 +82,11 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                                     try{
                                         if(scanner.hasNext()){
                                             anno= scanner.nextInt();
-                                        }if(anno>=1900 && anno<=2999){
+                                        }if(anno>=LocalDate.now().getYear()-90 && anno<=LocalDate.now().getYear()-8){
+
                                             break;
                                         }else {
-                                            System.out.println("Errore: l'anno deve essere compresso tra 1900 e 2999");
+                                            System.out.println("Errore: l'anno deve essere compresso tra "+ (LocalDate.now().getYear()-100) +" e "+(LocalDate.now().getYear()-8));
                                         }
                                     }catch (InputMismatchException e){
                                         System.out.println("Inserisci un numero valido");
@@ -113,7 +115,48 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                                     try{
                                         if(scanner.hasNext()){
                                             giorno= scanner.nextInt();
-                                        }if(giorno>0 && giorno<13){
+                                        }if(giorno>0 && giorno<31){
+                                            break;
+                                        }else {
+                                            System.out.println("Errore: il numero inserito deve essere compresso tra 1 e 31");
+                                        }
+                                    }catch (InputMismatchException e){
+                                        System.out.println("Inserisci un numero valido");
+                                        scanner.nextLine();
+                                    }
+                                }
+                                LocalDate date=LocalDate.of(anno,mese,giorno);
+                                Utente utente=new Utente(nome,cognome,date);
+                                System.out.println("Utente con ID: "+ utente.getId()+" generato con successo!");
+                                System.out.println(utente);
+                                //utenteDAO.save(utente);
+                                break;
+                            case 2:
+                                System.out.println("Dato che hai già un ID, creiamo la tua tessera personale");
+                                System.out.println("Inseriamo da quando vuoi che sia attiva la tua tessera");
+                                int annoEmmissione=LocalDate.now().getYear()-1;
+                                while (annoEmmissione<LocalDate.now().getYear()){
+                                    System.out.println("Inserisci l'anno: ");
+                                    try{
+                                        if(scanner.hasNext()){
+                                        annoEmmissione= scanner.nextInt();
+                                        }if(annoEmmissione>=LocalDate.now().getYear()){
+                                           break;
+                                        }else {
+                                            System.out.println("Errore: l'anno non può essere precedente all'anno corrente, inserisci un anno valido");
+                                        }
+                                    }catch (InputMismatchException e){
+                                        System.out.println("Inserisci un numero valido");
+                                        scanner.nextLine();
+                                    }
+                                }
+                                int meseEmmissione=-1;
+                                while (meseEmmissione==-1){
+                                    System.out.println("Inserisci il mese in formato numerico(da 1 a 12): ");
+                                    try{
+                                        if(scanner.hasNext()){
+                                            meseEmmissione= scanner.nextInt();
+                                        }if(meseEmmissione>0 && meseEmmissione<13){
                                             break;
                                         }else {
                                             System.out.println("Errore: il numero inserito deve essere compresso tra 1 e 12");
@@ -123,12 +166,32 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                                         scanner.nextLine();
                                     }
                                 }
+                                int giornoEmmissione=-1;
+                                while (giornoEmmissione==-1){
+                                    System.out.println("Inserisci il giorno in formato numerico(da 1 a 31): ");
+                                    try{
+                                        if(scanner.hasNext()){
+                                            giornoEmmissione= scanner.nextInt();
+                                        }if(giornoEmmissione>0 && giornoEmmissione<31){
+                                            break;
+                                        }else {
+                                            System.out.println("Errore: il numero inserito deve essere compresso tra 1 e 31");
+                                        }
+                                    }catch (InputMismatchException e){
+                                        System.out.println("Inserisci un numero valido");
+                                        scanner.nextLine();
+                                    }
+                                }
+                                LocalDate dataEmissione= LocalDate.of(annoEmmissione,meseEmmissione,giornoEmmissione);
+                                Tessera tessera=new Tessera(dataEmissione);
+                                System.out.println(tessera);
+
+
 
                         }
                     }
 
-//                case 2:
-//
+               case 2:
 //                    break;
 //                case 3:
 //
