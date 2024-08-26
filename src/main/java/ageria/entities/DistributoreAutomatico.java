@@ -9,30 +9,22 @@ import jakarta.persistence.Table;
 @Entity
 @DiscriminatorValue("distributore_automatico")
 public class DistributoreAutomatico extends PuntodiEmissione{
-@Column(name = "tipo_mezzo")
-@Enumerated(EnumType.STRING)
-private StateTypeMezzo tipo;
+@Column(name = "stato")
+private boolean inFunzione;
 
-public DistributoreAutomatico( String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, StateTypeMezzo tipo) {
+    public DistributoreAutomatico(String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, boolean inFunzione) {
         super(nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
-        this.tipo = tipo;
+        this.inFunzione = inFunzione;
     }
+
     public DistributoreAutomatico() {
 
     }
 
-    public StateTypeMezzo getStato() {
-        return tipo;
-    }
-
-    public void setStato(StateTypeMezzo tipo) {
-        this.tipo = tipo;
-    }
-
     @Override
     public String toString() {
-        return "DistributoreAutomatico{"+super.toString() +
-                "stato=" + tipo +
+        return "DistributoreAutomatico{"+ super.toString() +
+                "inFunzione=" + inFunzione +
                 "} " ;
     }
 }
