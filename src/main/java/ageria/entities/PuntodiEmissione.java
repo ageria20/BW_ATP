@@ -1,10 +1,20 @@
 package ageria.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+
 public abstract class PuntodiEmissione {
+    @Id
+    @GeneratedValue
     protected long id;
+    @Column(name="nome")
     protected String nome;
+    @Column(name="cognome")
     protected String indirizzo;
+   @OneToMany(mappedBy = "puntoEmissione")
     protected Biglietto bigliettiEmessi;
+   @OneToMany(mappedBy = "puntoEmissione")
     protected Abbonamento abbonamentiEmessi;
 
     public PuntodiEmissione(long id, String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi) {
