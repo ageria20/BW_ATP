@@ -1,39 +1,38 @@
 package ageria.DAO;
 
-
 import ageria.entities.Abbonamento;
-import ageria.entities.PuntodiEmissione;
+import ageria.entities.Tessera;
 import ageria.exceptions.NotFoundEx;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-public class AbbonamentoDAO {
+public class TesseraDAO {
     private final EntityManager em;
 
-    public AbbonamentoDAO(EntityManager em){
+    public TesseraDAO(EntityManager em){
         this.em=em;
     }
 
-    public void save(Abbonamento abbD){
+    public void save(Tessera tessera){
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-        em.persist(abbD);
+        em.persist(tessera);
         transaction.commit();
-        System.out.println("l'abbonamento con ID: "+ abbD.getId()+"è stato salvato");
+        System.out.println("l'abbonamento con ID: "+ tessera.getNumeroTessera()+"è stata salvata");
     }
-    public Abbonamento findByID(long id) {
-        Abbonamento found = em.find(Abbonamento.class, id);
+    public Tessera findByID(long id) {
+        Tessera found = em.find(Tessera.class, id);
         if (found == null) throw new NotFoundEx(id);
         return found;
     }
 
     public void delete(long id) {
-        Abbonamento found = this.findByID(id);
+        Tessera found = this.findByID(id);
         if (found == null) throw new NotFoundEx(id);
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);
         transaction.commit();
-        System.out.println("l'abbonamento con ID: "+ id +" è stato rimosso correttamente");
+        System.out.println("la tessera con ID: "+ id +" è stato rimossa correttamente");
     }
 }
