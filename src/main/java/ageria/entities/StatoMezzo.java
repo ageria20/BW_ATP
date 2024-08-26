@@ -8,8 +8,12 @@ import javax.xml.namespace.QName;
 import java.time.LocalDate;
 
 @Entity
-@DiscriminatorValue("stato_mezzo")
+@Table(name = "stato_mezzo")
 public class StatoMezzo {
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "mezzo")
