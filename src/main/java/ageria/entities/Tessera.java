@@ -3,73 +3,77 @@ package ageria.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "tessera")
 public class Tessera {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long numeroTessera;
+
     @Column(name = "data_emissione")
-    private LocalDate data_emissione;
+    private LocalDate dataEmissione;
+
     @Column(name = "data_scadenza")
-    private LocalDate data_scadenza;
+    private LocalDate dataScadenza;
 
-    private int nBiglietti;
-    private int abbonamenti;
+    @OneToMany(mappedBy = "tessera")
+    private List<Biglietto> biglietti;
 
-    public Tessera(){}
+    @OneToMany(mappedBy = "tessera")
+    private List<Abbonamento> abbonamenti;
 
-    public Tessera( LocalDate data_emissione) {
-        this.data_emissione = data_emissione;
-        this.data_scadenza=calcolaDataScadenzaTessera();
+    @OneToOne
+    @JoinColumn(name = "utente_id", unique = true)
+    private Utente utente;
+
+    public Tessera() {}
+
+    public Tessera(LocalDate dataEmissione) {
+        this.dataEmissione = dataEmissione;
+        this.dataScadenza = calcolaDataScadenzaTessera();
     }
 
-    public LocalDate calcolaDataScadenzaTessera(){
-        return data_emissione.plusYears(1);
-    }
-    //Getter & Setters
-
-    public long getId() {
-        return id;
+    public LocalDate calcolaDataScadenzaTessera() {
+        return dataEmissione.plusYears(1);
     }
 
-    public LocalDate getData_emissione() {
-        return data_emissione;
+    // Getter & Setter
+
+    public long getNumeroTessera() {
+        return numeroTessera;
     }
 
-    public void setData_emissione(LocalDate data_emissione) {
-        this.data_emissione = data_emissione;
+    public LocalDate getDataEmissione() {
+        return dataEmissione;
     }
 
-    public LocalDate getData_scadenza() {
-        return data_scadenza;
+    public void setDataEmissione(LocalDate dataEmissione) {
+        this.dataEmissione = dataEmissione;
     }
 
-    public int getnBiglietti() {
-        return nBiglietti;
+    public LocalDate getDataScadenza() {
+        return dataScadenza;
     }
 
-    public void setnBiglietti(int nBiglietti) {
-        this.nBiglietti = nBiglietti;
+    public Utente getUtente() {
+        return utente;
     }
 
-    public int getAbbonamenti() {
-        return abbonamenti;
-    }
-
-    public void setAbbonamenti(int abbonamenti) {
-        this.abbonamenti = abbonamenti;
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     @Override
     public String toString() {
         return "Tessera{" +
-                "id=" + id +
-                ", data_emissione=" + data_emissione +
-                ", data_scadenza=" + data_scadenza +
-                ", nBiglietti=" + nBiglietti +
+                "numeroTessera=" + numeroTessera +
+                ", dataEmissione=" + dataEmissione +
+                ", dataScadenza=" + dataScadenza +
+                ", biglietti=" + biglietti +
                 ", abbonamenti=" + abbonamenti +
+                ", utente=" + utente +
                 '}';
     }
 }

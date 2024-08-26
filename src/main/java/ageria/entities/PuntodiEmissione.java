@@ -2,6 +2,8 @@ package ageria.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 
 public abstract class PuntodiEmissione {
@@ -10,19 +12,16 @@ public abstract class PuntodiEmissione {
     protected long id;
     @Column(name="nome")
     protected String nome;
-    @Column(name="cognome")
+    @Column(name="indirizzo")
     protected String indirizzo;
-   @OneToMany(mappedBy = "puntoEmissione")
-    protected Biglietto bigliettiEmessi;
-   @OneToMany(mappedBy = "puntoEmissione")
-    protected Abbonamento abbonamentiEmessi;
-
+    @OneToMany(mappedBy = "puntoEmissione")
+    protected List<Biglietto> bigliettiEmessi;
+    @OneToMany(mappedBy = "puntoEmissione")
+    protected List<Abbonamento> abbonamentiEmessi;
     public PuntodiEmissione(String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi) {
 
         this.nome = nome;
         this.indirizzo = indirizzo;
-        this.bigliettiEmessi = bigliettiEmessi;
-        this.abbonamentiEmessi = abbonamentiEmessi;
     }
     public PuntodiEmissione(){}
 
@@ -46,20 +45,20 @@ public abstract class PuntodiEmissione {
         this.indirizzo = indirizzo;
     }
 
-    public Biglietto getBigliettiEmessi() {
-        return bigliettiEmessi;
-    }
-
-    public void setBigliettiEmessi(Biglietto bigliettiEmessi) {
-        this.bigliettiEmessi = bigliettiEmessi;
-    }
-
-    public Abbonamento getAbbonamentiEmessi() {
+    public List<Abbonamento> getAbbonamentiEmessi() {
         return abbonamentiEmessi;
     }
 
-    public void setAbbonamentiEmessi(Abbonamento abbonamentiEmessi) {
+    public void setAbbonamentiEmessi(List<Abbonamento> abbonamentiEmessi) {
         this.abbonamentiEmessi = abbonamentiEmessi;
+    }
+
+    public List<Biglietto> getBigliettiEmessi() {
+        return bigliettiEmessi;
+    }
+
+    public void setBigliettiEmessi(List<Biglietto> bigliettiEmessi) {
+        this.bigliettiEmessi = bigliettiEmessi;
     }
 
     @Override

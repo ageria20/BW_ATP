@@ -1,32 +1,41 @@
 package ageria.entities;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "utente")
 public class Utente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String nome;
-    private String cognome;
-    private LocalDate data_di_nascita;
 
-    public Utente(long id, String nome, String cognome, LocalDate data_di_nascita) {
-        this.id = id;
+    @Column(name = "nome")
+    private String nome;
+
+    @Column(name = "cognome")
+    private String cognome;
+
+    @Column(name = "data_di_nascita")
+    private LocalDate dataDiNascita;
+
+    @OneToOne
+    @JoinColumn(name = "tessera_id", referencedColumnName = "numeroTessera")
+    private Tessera tessera;
+
+    public Utente() {}
+
+    public Utente(String nome, String cognome, LocalDate dataDiNascita) {
         this.nome = nome;
         this.cognome = cognome;
-        this.data_di_nascita = data_di_nascita;
+        this.dataDiNascita = dataDiNascita;
     }
 
-    //Getters & Setters
-
+    // Getter & Setter
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -45,12 +54,20 @@ public class Utente {
         this.cognome = cognome;
     }
 
-    public LocalDate getData_di_nascita() {
-        return data_di_nascita;
+    public LocalDate getDataDiNascita() {
+        return dataDiNascita;
     }
 
-    public void setData_di_nascita(LocalDate data_di_nascita) {
-        this.data_di_nascita = data_di_nascita;
+    public void setDataDiNascita(LocalDate dataDiNascita) {
+        this.dataDiNascita = dataDiNascita;
+    }
+
+    public Tessera getTessera() {
+        return tessera;
+    }
+
+    public void setTessera(Tessera tessera) {
+        this.tessera = tessera;
     }
 
     @Override
@@ -59,7 +76,8 @@ public class Utente {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
-                ", data_di_nascita=" + data_di_nascita +
+                ", dataDiNascita=" + dataDiNascita +
+                ", tessera=" + tessera +
                 '}';
     }
 }
