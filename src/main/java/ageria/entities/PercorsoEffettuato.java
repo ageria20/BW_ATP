@@ -14,7 +14,8 @@ public class PercorsoEffettuato {
     @GeneratedValue
     private long id;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "percorsi_effettuati", nullable = false)
     private Mezzo mezzo;
 
     @Column

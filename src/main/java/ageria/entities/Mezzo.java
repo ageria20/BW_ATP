@@ -28,8 +28,8 @@ public class Mezzo {
     @Column (name = "biglietti_validati")
     private int bigliettiValidati;
 
-    @Column (name = "percorsi_effettuati")
-    private int percorsiEffettuati;
+    @OneToMany(mappedBy = "percorsi_effettuati")
+    private List<PercorsoEffettuato> percorsiEffettuati;
 
     @OneToMany(mappedBy = "mezzo")
     private List<StatoMezzo> staotMezzo;
@@ -41,7 +41,7 @@ public class Mezzo {
     public Mezzo() {
     }
 
-    public Mezzo(TipoMezzo tipoMezzo, int capienza, boolean statoManutenzione, int bigliettiValidati, int percorsiEffettuati, List<StatoMezzo> staotMezzo, Tratta trattaAssegnata) {
+    public Mezzo(TipoMezzo tipoMezzo, int capienza, boolean statoManutenzione, int bigliettiValidati, List<PercorsoEffettuato> percorsiEffettuati, List<StatoMezzo> staotMezzo, Tratta trattaAssegnata) {
         this.tipoMezzo = tipoMezzo;
         this.capienza = capienza;
         this.statoManutenzione = statoManutenzione;
@@ -51,6 +51,13 @@ public class Mezzo {
         this.trattaAssegnata = trattaAssegnata;
     }
 
+    public List<PercorsoEffettuato> getPercorsiEffettuati() {
+        return percorsiEffettuati;
+    }
+
+    public void setPercorsiEffettuati(List<PercorsoEffettuato> percorsiEffettuati) {
+        this.percorsiEffettuati = percorsiEffettuati;
+    }
 
     public long getId() {
         return id;
@@ -92,13 +99,9 @@ public class Mezzo {
         this.bigliettiValidati = bigliettiValidati;
     }
 
-    public int getPercorsiEffettuati() {
-        return percorsiEffettuati;
-    }
 
-    public void setPercorsiEffettuati(int percorsiEffettuati) {
-        this.percorsiEffettuati = percorsiEffettuati;
-    }
+
+
 
     public List<StatoMezzo> getStaotMezzo() {
         return staotMezzo;
