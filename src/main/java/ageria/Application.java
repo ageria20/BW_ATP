@@ -22,7 +22,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         //qui cominciamo con lo scanner
         Scanner scanner=new Scanner(System.in);
-\
 
 
 
