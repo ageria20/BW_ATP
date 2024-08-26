@@ -3,6 +3,7 @@ package ageria.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "tessera")
@@ -17,10 +18,14 @@ public class Tessera {
     @Column(name = "data_scadenza")
     private LocalDate dataScadenza;
 
-    private int nBiglietti;
-    private int abbonamenti;
+    @OneToMany(mappedBy = "tessera")
+    private List<Biglietto> biglietti;
 
-    @OneToOne(mappedBy = "tessera")
+    @OneToMany(mappedBy = "tessera")
+    private List<Abbonamento> abbonamenti;
+
+    @OneToOne
+    @JoinColumn(name = "utente_id", unique = true)
     private Utente utente;
 
     public Tessera() {}
@@ -52,22 +57,6 @@ public class Tessera {
         return dataScadenza;
     }
 
-    public int getnBiglietti() {
-        return nBiglietti;
-    }
-
-    public void setnBiglietti(int nBiglietti) {
-        this.nBiglietti = nBiglietti;
-    }
-
-    public int getAbbonamenti() {
-        return abbonamenti;
-    }
-
-    public void setAbbonamenti(int abbonamenti) {
-        this.abbonamenti = abbonamenti;
-    }
-
     public Utente getUtente() {
         return utente;
     }
@@ -82,8 +71,9 @@ public class Tessera {
                 "numeroTessera=" + numeroTessera +
                 ", dataEmissione=" + dataEmissione +
                 ", dataScadenza=" + dataScadenza +
-                ", nBiglietti=" + nBiglietti +
+                ", biglietti=" + biglietti +
                 ", abbonamenti=" + abbonamenti +
+                ", utente=" + utente +
                 '}';
     }
 }

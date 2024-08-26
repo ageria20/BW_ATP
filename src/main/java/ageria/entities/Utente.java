@@ -20,7 +20,7 @@ public class Utente {
     @Column(name = "data_di_nascita")
     private LocalDate dataDiNascita;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "tessera_id", referencedColumnName = "numeroTessera")
     private Tessera tessera;
 
