@@ -14,17 +14,21 @@ public class Biglietto {
     private LocalDate dataEmissione;
     @ManyToOne
     @JoinColumn(name = "punto_emissione")
-    private PuntodiEmissione puntoDiEmissione;
+    private PuntodiEmissione puntoEmissione;
     @ManyToOne
     @JoinColumn(name = "tipo_tessera")
     private Tessera tessera;
+    @ManyToOne
+    @JoinColumn(name = "biglietti_vidimati")
+    private Mezzo mezzo;
+
 
     public Biglietto() {
     }
 
     public Biglietto(LocalDate dataEmissione, PuntodiEmissione puntoDiEmissione, Tessera tessera) {
         this.dataEmissione = dataEmissione;
-        this.puntoDiEmissione = puntoDiEmissione;
+        this.puntoEmissione = puntoDiEmissione;
         this.tessera = tessera;
     }
 
@@ -41,11 +45,11 @@ public class Biglietto {
     }
 
     public PuntodiEmissione getPuntoDiEmissione() {
-        return puntoDiEmissione;
+        return puntoEmissione;
     }
 
     public void setPuntoDiEmissione(PuntodiEmissione puntoDiEmissione) {
-        this.puntoDiEmissione = puntoDiEmissione;
+        this.puntoEmissione = puntoDiEmissione;
     }
 
     public Tessera getTessera() {
@@ -61,7 +65,7 @@ public class Biglietto {
         return "Biglietto{" +
                 "id=" + id +
                 ", dataEmissione=" + dataEmissione +
-                ", puntoDiEmissione=" + puntoDiEmissione +
+                ", puntoDiEmissione=" + puntoEmissione +
                 ", tessera=" + tessera +
                 '}';
     }

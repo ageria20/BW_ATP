@@ -4,9 +4,9 @@ import ageria.enums.RivenditoreType;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="rivenditore_autorizzato")
+@DiscriminatorValue("rivenditore_autorizzato")
 public class RivenditoreAutorizzato extends PuntodiEmissione {
-    @Column(name = "tipo_rivenditore")
+    @Column(name = "tipo_rivenditore", insertable=false, updatable=false)
     @Enumerated(EnumType.STRING)
     private RivenditoreType tipo;
 

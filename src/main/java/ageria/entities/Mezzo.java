@@ -19,6 +19,9 @@ public class Mezzo {
     private TipoMezzo tipoMezzo;
 
     @Column
+    private String targa;
+
+    @Column
     private int capienza;
 
     @Column (name = "stato_manutenzione")
@@ -27,11 +30,11 @@ public class Mezzo {
     @Column (name = "biglietti_validati")
     private int bigliettiValidati;
 
-    @OneToMany(mappedBy = "percorsi_effettuati")
+    @OneToMany(mappedBy = "mezzo")
     private List<PercorsoEffettuato> percorsiEffettuati;
 
     @OneToMany(mappedBy = "mezzo")
-    private List<StatoMezzo> staotMezzo;
+    private List<StatoMezzo> statoMezzo;
 
     @ManyToOne
     @JoinColumn(name="tratta_assegnata")
@@ -49,7 +52,7 @@ public class Mezzo {
         this.statoManutenzione = statoManutenzione;
         this.bigliettiValidati = bigliettiValidati;
         this.percorsiEffettuati = percorsiEffettuati;
-        this.staotMezzo = staotMezzo;
+        this.statoMezzo = staotMezzo;
         this.trattaAssegnata = trattaAssegnata;
     }
 
@@ -105,12 +108,12 @@ public class Mezzo {
 
 
 
-    public List<StatoMezzo> getStaotMezzo() {
-        return staotMezzo;
+    public List<StatoMezzo> getStatoMezzo() {
+        return statoMezzo;
     }
 
-    public void setStaotMezzo(List<StatoMezzo> staotMezzo) {
-        this.staotMezzo = staotMezzo;
+    public void setStaotMezzo(List<StatoMezzo> statoMezzo) {
+        this.statoMezzo = statoMezzo;
     }
 
     public Tratta getTrattaAssegnata() {
@@ -130,7 +133,7 @@ public class Mezzo {
                 ", statoManutenzione=" + statoManutenzione +
                 ", bigliettiValidati=" + bigliettiValidati +
                 ", percorsiEffettuati=" + percorsiEffettuati +
-                ", staotMezzo=" + staotMezzo +
+                ", statoMezzo=" + statoMezzo +
                 ", trattaAssegnata=" + trattaAssegnata +
                 '}';
     }

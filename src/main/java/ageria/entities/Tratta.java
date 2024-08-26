@@ -23,7 +23,7 @@ public class Tratta {
     @Column (name = "tempo_previsto")
     private Timestamp tempoPrevisto;
 
-    @OneToMany(mappedBy = "tratta_assegnata")
+    @OneToMany(mappedBy = "trattaAssegnata")
     private List<Mezzo> mezziAssegnati;
 
     public Tratta() {

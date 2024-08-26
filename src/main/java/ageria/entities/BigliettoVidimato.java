@@ -14,9 +14,9 @@ public class BigliettoVidimato {
     @GeneratedValue
     private long id;
 
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "biglietto")
-    private Biglietto biglietto;*/
+    private Biglietto biglietto;
 
     @ManyToOne
     @JoinColumn(name = "biglietti_vidimati")

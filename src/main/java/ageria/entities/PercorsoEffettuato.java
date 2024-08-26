@@ -18,7 +18,8 @@ public class PercorsoEffettuato {
     @JoinColumn(name = "percorsi_effettuati", nullable = false)
     private Mezzo mezzo;
 
-    @Column
+    @OneToOne
+    @JoinColumn(name = "tratta")
     private Tratta tratta;
 
     @Column(name = "data_inizio")
