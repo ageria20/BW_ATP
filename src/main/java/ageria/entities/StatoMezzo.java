@@ -17,7 +17,7 @@ public class StatoMezzo {
 
     @ManyToOne
     @JoinColumn(name = "mezzo")
-    private TipoMezzo mezzo;
+    private Mezzo mezzo;
 
     @Column
     private Manutenzione stato;
@@ -31,18 +31,18 @@ public class StatoMezzo {
     public StatoMezzo() {
     }
 
-    public StatoMezzo(TipoMezzo mezzo, Manutenzione stato, LocalDate dataInizio, LocalDate dataFine) {
+    public StatoMezzo(Mezzo mezzo, Manutenzione stato, LocalDate dataInizio, LocalDate dataFine) {
         this.mezzo = mezzo;
         this.stato = stato;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
     }
 
-    public TipoMezzo getMezzo() {
+    public Mezzo getMezzo() {
         return mezzo;
     }
 
-    public void setMezzo(TipoMezzo mezzo) {
+    public void setMezzo(Mezzo mezzo) {
         this.mezzo = mezzo;
     }
 
