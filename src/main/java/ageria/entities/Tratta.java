@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("tratta")
+@Table(name ="tratta")
 public class Tratta {
 
     @Id

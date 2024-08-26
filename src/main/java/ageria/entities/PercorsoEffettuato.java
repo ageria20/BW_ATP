@@ -7,7 +7,7 @@ import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 
 @Entity
-@DiscriminatorValue("percorso_effettuato")
+@Table(name = "percorso_effettuato")
 public class PercorsoEffettuato {
 
     @Id
