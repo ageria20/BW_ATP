@@ -6,6 +6,9 @@ import ageria.entities.PuntodiEmissione;
 import ageria.exceptions.NotFoundEx;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+
+import java.util.List;
 
 public class AbbonamentoDAO {
     private final EntityManager em;
@@ -35,5 +38,16 @@ public class AbbonamentoDAO {
         em.remove(found);
         transaction.commit();
         System.out.println("l'abbonamento con ID: "+ id +" è stato rimosso correttamente");
+    }
+
+    public List<Abbonamento> findByNumeroTessera(long numeroTessera){
+        TypedQuery<Abbonamento> query=em.createQuery(
+                "SELECT a FROM Abbonamento a WHERE a.tessera.id=:numeroTessera",
+                Abbonamento.class);
+        query.setParameter("numeroTessera",numeroTessera);
+        if (query.getResultList().isEmpty()) {
+            throw new NotFoundEx();
+        }
+        return query.getResultList();
     }
 }
