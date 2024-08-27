@@ -414,6 +414,9 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
 
+    public static void creazioneMezzo(){}
+
+
    /*  public static void creazioneElementoAdmin(Scanner scanner){
         while(true){
             System.out.println("Premi 1 per inserire un nuovo Mezzo");
