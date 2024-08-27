@@ -66,6 +66,22 @@ public class Tessera {
         this.utente = utente;
     }
 
+    public List<Biglietto> getBiglietti() {
+        return biglietti;
+    }
+
+    public void setBiglietti(List<Biglietto> biglietti) {
+        this.biglietti = biglietti;
+    }
+
+    public List<Abbonamento> getAbbonamenti() {
+        return abbonamenti;
+    }
+
+    public void setAbbonamenti(List<Abbonamento> abbonamenti) {
+        this.abbonamenti = abbonamenti;
+    }
+
     @Override
     public String toString() {
         return "Tessera{" +

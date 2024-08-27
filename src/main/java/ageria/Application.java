@@ -48,7 +48,7 @@ public class Application {
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner, utenteDAO, tesseraDAO);
+                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD);
                 case 2:
                     break;
                 case 0:
@@ -135,7 +135,7 @@ public class Application {
         System.out.println(tessera);
     }
 
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO) {
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per la creazione di un nuovo UTENTE e relativa TESSERA");
@@ -162,7 +162,7 @@ public class Application {
                 case 2:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,);
+                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO);
                     break;
                 case 3:
                     System.out.println("-------------------------------------------------");
@@ -178,7 +178,7 @@ public class Application {
         }
     }
 
-    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO) {
+    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
         boolean datavalida;
         LocalDate dataInizio;
         do {
@@ -290,8 +290,10 @@ public class Application {
                 int sceltaPunto = scanner.nextInt();
                 if (sceltaPunto == 1) {
                     puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
+                    puntodiEmissioneDAO.save(puntoEmissione);
                 } else if (sceltaPunto == 2) {
                     puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
+                    puntodiEmissioneDAO.save(puntoEmissione);
                 } else {
                     System.out.println("Inserire un valore valido");
                 }
@@ -321,9 +323,7 @@ public class Application {
 
     }
 
-    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO) {
-        System.out.println("Hai scelto di acquistare uno o più biglietti");
-
+    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO) {
         int numeroBiglietti = 0;
         boolean inputValido = false;
 
@@ -341,8 +341,6 @@ public class Application {
                 scanner.next();
             }
         }
-
-        System.out.println("Ora mi serve sapere il numero di tessera su cui caricare il numero di biglietti (" + numeroBiglietti + ") richiesti");
 
         PuntodiEmissione puntoEmissione = null;
         inputValido = false;
@@ -382,17 +380,15 @@ public class Application {
             System.out.println("tessera: " + tessera);
 
             System.out.println("Caricamento Biglietto/i in corso...");
-            Biglietto[] biglietti=new Biglietto[numeroBiglietti];
+            //Biglietto[] biglietti=new Biglietto[numeroBiglietti];
             for (int i = 0; i < numeroBiglietti; i++) {
-                biglietti[i] = new Biglietto(puntoEmissione, tessera);
+                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera);
+                 bigliettoDAO.save(biglietto);
                 System.out.println("Biglietto " + (i + 1) + " creato.");
             }
-            System.out.println(tessera);
         } else {
             System.out.println("Non è stato selezionato un punto di emissione valido.");
         }
-        System.out.println(tessera);
-
 //     public static void creazioneElementoAdmin(int scelta){
 //        while(true){
 //            System.out.println("Premi 1 per inserire un nuovo Mezzo");
