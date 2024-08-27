@@ -52,6 +52,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 1:
                     inputCreazione(scanner,tesseraDAO);
                case 2:
+                   creazioneTratta(scanner, trattaDAO);
                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -313,7 +314,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-    public static void creazioneTratta(Scanner scanner){
+    public static void creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
         Timestamp tempoPrevisto = null;
@@ -353,6 +354,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         // Creazione dell'oggetto Tratta
         Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
+        trattaDAO.save(tratta);
 
         // Stampa l'oggetto creato
         System.out.println("Oggetto Tratta creato: " + tratta);
