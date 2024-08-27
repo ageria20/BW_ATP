@@ -30,9 +30,10 @@ public class Tessera {
 
     public Tessera() {}
 
-    public Tessera(LocalDate dataEmissione) {
-        this.dataEmissione = dataEmissione;
-        this.dataScadenza = calcolaDataScadenzaTessera();
+    public Tessera( Utente utente) {
+        this.dataEmissione = LocalDate.now();
+        this.dataScadenza =calcolaDataScadenzaTessera();
+        this.utente = utente;
     }
 
     public LocalDate calcolaDataScadenzaTessera() {
@@ -73,7 +74,7 @@ public class Tessera {
                 ", dataScadenza=" + dataScadenza +
                 ", biglietti=" + biglietti +
                 ", abbonamenti=" + abbonamenti +
-                ", utente=" + utente +
+                ", utente= ID: " + utente.getId() +" di nome e cognome: "+utente.getNome()+" "+utente.getCognome()+", nato il: "+utente.getDataDiNascita()+
                 '}';
     }
 }
