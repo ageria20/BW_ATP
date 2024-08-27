@@ -13,6 +13,7 @@ import jakarta.persistence.Persistence;
 import java.lang.reflect.Member;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.InputMismatchException;
@@ -188,6 +189,10 @@ public class Application {
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto rinnovare l'abbonamento");
                     rinnovoAbbonamento(scanner,tesseraDAO);
+                case 6:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto di vidimare il biglietto");
+                    vidimazzioneBiglietto();
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -343,17 +348,18 @@ public class Application {
 
     }
 
-    public static void vidimazzioneBiglietto(Biglietto biglietto, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner, Mezzo mezzo) {
+    public static void vidimazzioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimato bigliettoVidimato, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner,BigliettoDAO bigliettoDAO,Biglietto biglietto) {
         while (true) {
-
-
             try {
-                long esiste = bigliettoVidimatoDAO.findByID(biglietto.getId());
-                if ()
-                    System.out.println("inserisci biglietto da vidimare");
-                long biglietto1 = scanner.nextLong();
-                break;
-
+                System.out.println("Hai scelto di vidimare un biglietto, inserisci l'ID del biglietto per verificare che questa non sia già stata utilizzata");
+                long bigliettoID= scanner.nextLong();
+                Biglietto biglietto1=bigliettoDAO.findByID(bigliettoID);
+                System.out.println("Inserisci la linea del mezzo in cui stai: ");
+                long mezzoID= scanner.nextLong();
+                Mezzo mezzo1=mezzoDAO.findByID(mezzoID);
+                LocalDateTime oraVidimazione=LocalDateTime.now();
+                BigliettoVidimato bigliettoVidimato1=new BigliettoVidimato(biglietto1,mezzo1,oraVidimazione);
+                biglietto1.vidimazione();
             } catch (InputMismatchException e) {
                 System.out.println("inserisci un numero valido");
                 scanner.nextLine();
@@ -419,7 +425,7 @@ public class Application {
             System.out.println("Caricamento Biglietto/i in corso...");
             //Biglietto[] biglietti=new Biglietto[numeroBiglietti];
             for (int i = 0; i < numeroBiglietti; i++) {
-                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera);
+                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera,true);
                  bigliettoDAO.save(biglietto);
                 System.out.println("Biglietto " + (i + 1) + " creato.");
             }

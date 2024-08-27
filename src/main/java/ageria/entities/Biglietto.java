@@ -12,6 +12,8 @@ public class Biglietto {
     private long id;
     @Column(name = "data_emissione")
     private LocalDate dataEmissione;
+    @Column(name="biglietto_vidimato")
+    private boolean bigliettoVidimato;
     @ManyToOne
     @JoinColumn(name = "punto_emissione")
     private PuntodiEmissione puntoEmissione;
@@ -26,7 +28,14 @@ public class Biglietto {
     public Biglietto() {
     }
 
-    public Biglietto( PuntodiEmissione puntoDiEmissione, Tessera tessera) {
+    public Biglietto( PuntodiEmissione puntoEmissione, Tessera tessera,boolean bigliettoVidimato) {
+
+        this.puntoEmissione = puntoEmissione;
+        this.tessera = tessera;
+        this.bigliettoVidimato = bigliettoVidimato;
+    }
+
+    public Biglietto(PuntodiEmissione puntoDiEmissione, Tessera tessera) {
 
         this.puntoEmissione = puntoDiEmissione;
         this.tessera = tessera;
@@ -60,6 +69,14 @@ public class Biglietto {
         this.tessera = tessera;
     }
 
+    public boolean isBigliettoVidimato() {
+        return bigliettoVidimato;
+    }
+
+    public void setBigliettoVidimato(boolean bigliettoVidimato) {
+        this.bigliettoVidimato = bigliettoVidimato;
+    }
+
     @Override
     public String toString() {
         return "Biglietto{" +
@@ -68,5 +85,14 @@ public class Biglietto {
                 ", puntoDiEmissione=" + puntoEmissione +
                 ", tessera=" + tessera +
                 '}';
+    }
+    public void vidimazione(){
+        if(!this.bigliettoVidimato){
+            this.bigliettoVidimato=true;
+          mezzo.setBigliettiValidati(mezzo.getBigliettiValidati()+1);
+            System.out.println("Biglietto vidimato su "+mezzo.getTipoMezzo()+"con ID "+mezzo.getId());
+        }else {
+            System.out.println("Biglietto già vidimato");
+        }
     }
 }
