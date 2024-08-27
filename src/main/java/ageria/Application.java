@@ -150,6 +150,7 @@ public class Application {
             System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
             System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
             System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
+            System.out.println("Premi 5 per RINNOVARE la TESSERA scaduta");
             System.out.println("Premi 0 per USCIRE");
             System.out.print("Scegli un'opzione: ");
             int sceltaUtente = -1;
@@ -182,6 +183,10 @@ public class Application {
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità abbonamento");
                     verificaValiditàAbbonamento(scanner,abbonamentoDAO);
+                case 5:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto rinnovare l'abbonamento");
+                    rinnovoAbbonamento();
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -434,6 +439,27 @@ public class Application {
                 scanner.next();
             }
         }
+    }
+    public static void rinnovoAbbonamento(Scanner scanner,Tessera tessera,TesseraDAO tesseraDAO){
+
+        long numeroTessera=-1;
+        while (numeroTessera == -1) {
+            System.out.println("Inserisci ID tessera da rinnovare: ");
+            if (scanner.hasNextLong()) {
+                try {
+                    numeroTessera = scanner.nextLong();
+                    Tessera tesseraRinnovo=tesseraDAO.findByID(numeroTessera);
+                    tesseraRinnovo.rinnovoAutomatico();
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un valore valido");
+                    scanner.next();
+                }
+            } else {
+                System.out.println("Inserire un numero valido");
+                scanner.next();
+            }
+        }
+        tessera.rinnovoAutomatico();
     }
 
 //     public static void creazioneElementoAdmin(int scelta){
