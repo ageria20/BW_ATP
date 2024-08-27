@@ -6,6 +6,7 @@ import ageria.enums.AbbonamentoType;
 import ageria.enums.Manutenzione;
 import ageria.enums.RivenditoreType;
 import ageria.enums.TipoMezzo;
+import ageria.exceptions.NotFoundEx;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -147,7 +148,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println(tessera);
     }
 
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO) {
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
@@ -194,7 +195,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 6:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
-                    vidimazzioneBiglietto();
+                    vidimazzioneBiglietto(mezzoDAO,);
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -350,21 +351,42 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-    public static void vidimazzioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimato bigliettoVidimato, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner,BigliettoDAO bigliettoDAO,Biglietto biglietto) {
+    public static void vidimazioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner, BigliettoDAO bigliettoDAO) {
         while (true) {
             try {
-                System.out.println("Hai scelto di vidimare un biglietto, inserisci l'ID del biglietto per verificare che questa non sia già stata utilizzata");
-                long bigliettoID= scanner.nextLong();
-                Biglietto biglietto1=bigliettoDAO.findByID(bigliettoID);
-                System.out.println("Inserisci la linea del mezzo in cui stai: ");
-                long mezzoID= scanner.nextLong();
-                Mezzo mezzo1=mezzoDAO.findByID(mezzoID);
-                LocalDateTime oraVidimazione=LocalDateTime.now();
-                BigliettoVidimato bigliettoVidimato1=new BigliettoVidimato(biglietto1,mezzo1,oraVidimazione);
-                biglietto1.vidimazione();
+                System.out.println("Hai scelto di vidimare un biglietto. Inserisci l'ID del biglietto per verificare che non sia già stato utilizzato:");
+                long bigliettoID = scanner.nextLong();
+                Biglietto biglietto = bigliettoDAO.findByID(bigliettoID);
+
+                if (biglietto.isBigliettoVidimato()) {
+                    System.out.println("Questo biglietto è già stato vidimato.");
+                    continue;
+                }
+
+                System.out.println("Inserisci la linea del mezzo in cui ti trovi:");
+                long mezzoID = scanner.nextLong();
+                Mezzo mezzo = mezzoDAO.findByID(mezzoID);
+
+                LocalDateTime oraVidimazione = LocalDateTime.now();
+                BigliettoVidimato bigliettoVidimato = new BigliettoVidimato(biglietto, mezzo, oraVidimazione);
+
+                biglietto.vidimazione();
+                mezzo.setBigliettiValidati(mezzo.getBigliettiValidati() + 1);
+
+                bigliettoVidimatoDAO.save(bigliettoVidimato);
+                bigliettoDAO.save(biglietto);
+                mezzoDAO.save(mezzo);
+                System.out.println("Biglietto vidimato correttamente!");
+                break;
+
             } catch (InputMismatchException e) {
-                System.out.println("inserisci un numero valido");
+                System.out.println("Inserisci un numero valido.");
                 scanner.nextLine();
+            } catch (NotFoundEx e) {
+                System.out.println("Elemento non trovato: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Si è verificato un errore: " + e.getMessage());
+                break;
             }
         }
     }
@@ -487,7 +509,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
 
-    public static void creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
+    public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
         Timestamp tempoPrevisto = null;
@@ -634,7 +656,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 scanner.next();
             }
         }
-        trattaAssegnata = creazioneTratta(scanner, trattaDAO);
+       trattaAssegnata=creazioneTratta(scanner, trattaDAO);
         Mezzo mezzo = new Mezzo(tipoMezzo, targa, capienza, trattaAssegnata);
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
