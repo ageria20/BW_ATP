@@ -15,11 +15,13 @@ public class Mezzo {
     @GeneratedValue
     private long id;
 
-    @Column(name = "tipo_mezzo")
-    private TipoMezzo tipoMezzo;
-
     @Column
     private String targa;
+
+    @Column(name = "tipo_mezzo")
+    @Enumerated(EnumType.STRING)
+    private TipoMezzo tipoMezzo;
+
 
     @Column
     private int capienza;
@@ -54,6 +56,17 @@ public class Mezzo {
         this.percorsiEffettuati = percorsiEffettuati;
         this.statoMezzo = staotMezzo;
         this.trattaAssegnata = trattaAssegnata;
+    }
+
+    public Mezzo(TipoMezzo tipoMezzo, int capienza, boolean statoManutenzione, int bigliettiValidati, List<PercorsoEffettuato> percorsiEffettuati, List<StatoMezzo> statoMezzo, Tratta trattaAssegnata, List<Biglietto> bigliettiVidimati) {
+        this.tipoMezzo = tipoMezzo;
+        this.capienza = capienza;
+        this.statoManutenzione = statoManutenzione;
+        this.bigliettiValidati = bigliettiValidati;
+        this.percorsiEffettuati = percorsiEffettuati;
+        this.statoMezzo = statoMezzo;
+        this.trattaAssegnata = trattaAssegnata;
+        this.bigliettiVidimati = bigliettiVidimati;
     }
 
     public List<PercorsoEffettuato> getPercorsiEffettuati() {

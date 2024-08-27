@@ -26,8 +26,8 @@ public class Biglietto {
     public Biglietto() {
     }
 
-    public Biglietto(LocalDate dataEmissione, PuntodiEmissione puntoDiEmissione, Tessera tessera) {
-        this.dataEmissione = dataEmissione;
+    public Biglietto( PuntodiEmissione puntoDiEmissione, Tessera tessera) {
+
         this.puntoEmissione = puntoDiEmissione;
         this.tessera = tessera;
     }

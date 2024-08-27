@@ -66,6 +66,22 @@ public class Tessera {
         this.utente = utente;
     }
 
+    public List<Biglietto> getBiglietti() {
+        return biglietti;
+    }
+
+    public void setBiglietti(List<Biglietto> biglietti) {
+        this.biglietti = biglietti;
+    }
+
+    public List<Abbonamento> getAbbonamenti() {
+        return abbonamenti;
+    }
+
+    public void setAbbonamenti(List<Abbonamento> abbonamenti) {
+        this.abbonamenti = abbonamenti;
+    }
+
     @Override
     public String toString() {
         return "Tessera{" +
@@ -76,5 +92,14 @@ public class Tessera {
                 ", abbonamenti=" + abbonamenti +
                 ", utente= ID: " + utente.getId() +" di nome e cognome: "+utente.getNome()+" "+utente.getCognome()+", nato il: "+utente.getDataDiNascita()+
                 '}';
+    }
+
+    public void rinnovoAutomatico() {
+        if (LocalDate.now().isAfter(dataScadenza)) {
+            dataScadenza = LocalDate.now().plusYears(1);
+            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + dataScadenza);
+        } else {
+            System.out.println("La tessera è ancora valida fino al: " + dataScadenza);
+        }
     }
 }
