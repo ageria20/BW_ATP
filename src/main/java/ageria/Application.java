@@ -3,16 +3,18 @@ package ageria;
 import ageria.DAO.*;
 import ageria.entities.*;
 import ageria.enums.AbbonamentoType;
+import ageria.enums.Manutenzione;
 import ageria.enums.RivenditoreType;
+import ageria.enums.TipoMezzo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.lang.reflect.Member;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.InputMismatchException;
-import java.util.Locale;
-import java.util.Scanner;
+import java.time.format.DateTimeParseException;
+import java.util.*;
 
 public class Application {
 private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
@@ -311,26 +313,171 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-//     public static void creazioneElementoAdmin(int scelta){
-//        while(true){
-//            System.out.println("Premi 1 per inserire un nuovo Mezzo");
-//            System.out.println("Premi 2 per inserire un nuovo Punto di Emissione");
-//            System.out.println("Premi 3 per inserire un nuova Tratta");
-//            System.out.println("Premi 4 per creare un nuova Tessera");
-//            System.out.println("Premi 5 per creare un nuovo Abbonamento");
-//            System.out.println("Premi 6 per creare un nuovo Biglietto");
-//            System.out.println("Premi 0 per USCIRE");
-//            System.out.print("Scegli un'opzione: ");
-//            try{
-//                scelta = scanner.nextInt();
-//                scanner.nextLine();
-//            }catch(InputMismatchException ex){
-//                System.out.println("Inserisci un numero valido");
-//            }
-//
-//
-//        }
-//     }
+    public static void creazioneTratta(Scanner scanner){
+        String zonaDiPartenza = null;
+        String capolinea = null;
+        Timestamp tempoPrevisto = null;
+
+        // Gestione della Zona di Partenza
+        while (zonaDiPartenza == null || zonaDiPartenza.trim().isEmpty()) {
+            System.out.println("Inserisci la zona di partenza: ");
+            zonaDiPartenza = scanner.nextLine();
+            if (zonaDiPartenza.trim().isEmpty()) {
+                System.out.println("Errore: La zona di partenza non può essere vuota.");
+            }
+        }
+
+        // Gestione del Capolinea
+        while (capolinea == null || capolinea.trim().isEmpty()) {
+            System.out.println("Inserisci il capolinea: ");
+            capolinea = scanner.nextLine();
+            if (capolinea.trim().isEmpty()) {
+                System.out.println("Errore: Il capolinea non può essere vuoto.");
+            }
+        }
+
+        // Gestione del Tempo Previsto
+        while (tempoPrevisto == null) {
+            try {
+                System.out.println("Inserisci il tempo previsto (formato: yyyy-mm-dd hh:mm:ss): ");
+                String tempoPrevistoInput = scanner.nextLine();
+                tempoPrevisto = Timestamp.valueOf(tempoPrevistoInput);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Errore: Formato del tempo previsto non valido. Usa il formato yyyy-mm-dd hh:mm:ss.");
+            }
+        }
+
+        // Inizializza la lista vuota per i mezzi assegnati (se necessario)
+        // In questo esempio, la lista è vuota poiché non richiediamo dettagli sui mezzi
+        // Puoi implementare una logica più complessa per popolare questa lista se lo desideri.
+
+        // Creazione dell'oggetto Tratta
+        Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
+
+        // Stampa l'oggetto creato
+        System.out.println("Oggetto Tratta creato: " + tratta);
+    }
+
+    public static void creazioneStatoMezzo(Scanner scanner, Mezzo mezzo){
+         // Presupponiamo che l'oggetto Mezzo esista già e sia stato inizializzato
+        Manutenzione stato = null;
+        LocalDate dataInizio = null;
+        LocalDate dataFine = null;
+
+        // Gestione dello stato di manutenzione
+        while (stato == null) {
+            try {
+                System.out.println("Inserisci lo stato di manutenzione (IN_MANUTENZIONE, FUORI_MANUTENZIONE): ");
+                String statoInput = scanner.nextLine().toUpperCase();
+                stato = Manutenzione.valueOf(statoInput);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Errore: Stato di manutenzione non valido. Inserisci IN_MANUTENZIONE o FUORI_MANUTENZIONE.");
+            }
+        }
+
+        // Gestione della data di inizio
+        while (dataInizio == null) {
+            try {
+                System.out.println("Inserisci la data di inizio (formato: yyyy-mm-dd): ");
+                String dataInizioInput = scanner.nextLine();
+                dataInizio = LocalDate.parse(dataInizioInput);
+            } catch (DateTimeParseException e) {
+                System.out.println("Errore: Formato della data di inizio non valido. Usa il formato yyyy-mm-dd.");
+            }
+        }
+
+        // Gestione della data di fine
+        while (dataFine == null) {
+            try {
+                System.out.println("Inserisci la data di fine (formato: yyyy-mm-dd), oppure premi invio se non disponibile: ");
+                String dataFineInput = scanner.nextLine();
+                if (dataFineInput.isEmpty()) {
+                    break; // Nessuna data di fine inserita
+                }
+                dataFine = LocalDate.parse(dataFineInput);
+
+                if (dataFine.isBefore(dataInizio)) {
+                    System.out.println("Errore: La data di fine non può essere precedente alla data di inizio.");
+                    dataFine = null; // Resetta la data di fine
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Errore: Formato della data di fine non valido. Usa il formato yyyy-mm-dd.");
+            }
+        }
+
+        // Creazione dell'oggetto StatoMezzo
+        StatoMezzo statoMezzo = new StatoMezzo(mezzo, stato, dataInizio, dataFine);
+
+        // Stampa l'oggetto creato
+        System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
+    }
+
+   /*  public static void creazioneElementoAdmin(Scanner scanner){
+        while(true){
+            System.out.println("Premi 1 per inserire un nuovo Mezzo");
+            //System.out.println("Premi 2 per inserire un nuovo Punto di Emissione");
+            System.out.println("Premi 2 per inserire un nuova Tratta");
+           //System.out.println("Premi 4 per creare un nuova Tessera");
+           // System.out.println("Premi 5 per creare un nuovo Abbonamento");
+            System.out.println("Premi 6 per creare un nuovo Biglietto");
+            System.out.println("Premi 0 per USCIRE");
+            System.out.print("Scegli un'opzione: ");
+            int scelta = -1;
+            try{
+                scelta = scanner.nextInt();
+               scanner.nextLine();
+            }catch(InputMismatchException ex){
+               System.out.println("Inserisci un numero valido");
+            }
+            switch(scelta){
+                case 1:
+                    TipoMezzo tipoMezzo = null;
+                    int capienza = 0;
+                    boolean statoManutenzione = false;
+                    int bigliettiValidati = 0;
+                    Tratta trattaAssegnata = null;
+
+                    while(tipoMezzo == null) {
+                        try {
+                            System.out.println("Inserisci il tipo di Mezzo: AUTOBUS, TRAM");
+                            String sceltaMezzo = scanner.nextLine();
+                            tipoMezzo = TipoMezzo.valueOf(sceltaMezzo);
+                        } catch (IllegalArgumentException ex) {
+                            System.out.println("Inserisci un valore valido");
+                        }
+                    }
+                    while(true) {
+                        try {
+                            System.out.println("Inserisci la capienza del Mezzo");
+                            capienza = scanner.nextInt();
+                            scanner.nextLine();
+                            if(capienza <=0) {
+                                System.out.println("La capienza deve essere maggiore di 0");
+                            }
+                            else break;
+
+                        }catch(InputMismatchException ex){
+                            System.out.println("Inserisci un valore valido");
+                        }
+                        while(true){
+                            try{
+                                System.out.println("Inserisci lo stato di manutenzione del mezzo: (true/false)");
+                                statoManutenzione = scanner.nextBoolean();
+                                break;
+                            } catch(InputMismatchException ex) {
+                                System.out.println("Inserisci un valore valido");
+                            }
+                        }
+
+                    }
+
+
+            }
+
+            }
+
+        }
+     }*/
 
 
 
