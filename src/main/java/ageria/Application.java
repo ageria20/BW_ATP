@@ -17,12 +17,19 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Application {
+<<<<<<< Updated upstream
 private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
 
+=======
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
+    private static EntityManager em = emf.createEntityManager();
+    private static TrattaDAO trattaDAO = new TrattaDAO(em);
+>>>>>>> Stashed changes
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        EntityManager em = emf.createEntityManager();
+
         //qui mettiamo i DAO
+<<<<<<< Updated upstream
         PuntodiEmissioneDAO peD=new PuntodiEmissioneDAO(em);
         AbbonamentoDAO abbonamentoDAO=new AbbonamentoDAO(em);
         BigliettoDAO bigliettoDAO=new BigliettoDAO(em);
@@ -30,6 +37,15 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         TrattaDAO trattaDAO=new TrattaDAO(em);
         MezzoDAO mezzoDAO=new MezzoDAO(em);
         UtenteDAO utenteDAO=new UtenteDAO(em);
+=======
+        PuntodiEmissioneDAO peD = new PuntodiEmissioneDAO(em);
+        AbbonamentoDAO abbonamentoDAO = new AbbonamentoDAO(em);
+        BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
+        TesseraDAO tesseraDAO = new TesseraDAO(em);
+
+        MezzoDAO mezzoDAO = new MezzoDAO(em);
+        UtenteDAO utenteDAO = new UtenteDAO(em);
+>>>>>>> Stashed changes
 
         //qui cominciamo con lo scanner
 
@@ -314,7 +330,110 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
+<<<<<<< Updated upstream
     public static void creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
+=======
+    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO) {
+        int numeroBiglietti = 0;
+        boolean inputValido = false;
+
+        while (!inputValido) {
+            System.out.println("Quanti biglietti vuoi acquistare?");
+            try {
+                numeroBiglietti = scanner.nextInt();
+                if (numeroBiglietti <= 0) {
+                    System.out.println("Il numero di biglietti deve essere maggiore di zero.");
+                } else {
+                    inputValido = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido");
+                scanner.next();
+            }
+        }
+
+        PuntodiEmissione puntoEmissione = null;
+        inputValido = false;
+
+        while (!inputValido) {
+            System.out.println("Ora inserisci da dove stai acquistando:");
+            System.out.println("Premi 1 se dal punto autorizzato");
+            System.out.println("Premi 2 se dal distributore automatico");
+
+            try {
+                if (scanner.hasNextInt()) {
+                    int sceltaPunto = scanner.nextInt();
+                    if (sceltaPunto == 1) {
+                        puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
+                        inputValido = true;
+                    } else if (sceltaPunto == 2) {
+                        puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
+                        inputValido = true;
+                    } else {
+                        System.out.println("Inserire un valore valido");
+                    }
+                } else {
+                    System.out.println("Errore: inserisci un numero valido");
+                    scanner.next();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero valido");
+                scanner.next();
+            }
+        }
+
+        if (puntoEmissione != null) {
+            System.out.println("Inserisci numero di tessera dove caricare i biglietti: ");
+            long numeroTessera = scanner.nextLong();
+            scanner.nextLine();
+            Tessera tessera = tesseraDAO.findByID(numeroTessera);
+            System.out.println("tessera: " + tessera);
+
+            System.out.println("Caricamento Biglietto/i in corso...");
+            //Biglietto[] biglietti=new Biglietto[numeroBiglietti];
+            for (int i = 0; i < numeroBiglietti; i++) {
+                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera);
+                 bigliettoDAO.save(biglietto);
+                System.out.println("Biglietto " + (i + 1) + " creato.");
+            }
+        } else {
+            System.out.println("Non è stato selezionato un punto di emissione valido.");
+        }
+    }
+
+    public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
+        long numeroTessera = -1;
+        while (numeroTessera == -1) {
+            System.out.println("Inserire il numero di tessera associato all'abbonamento: ");
+            if (scanner.hasNextLong()) {
+                try {
+                    numeroTessera = scanner.nextLong();
+                    List<Abbonamento> abbonamentiPresenti = abbonamentoDAO.findByNumeroTessera(numeroTessera);
+                    if (abbonamentiPresenti.isEmpty()) {
+                        System.out.println("Nessun abbonamento trovato per la tessera inserita.");
+                    } else {
+                        for (Abbonamento abbonamento : abbonamentiPresenti) {
+                            System.out.println(abbonamento);
+                            if (abbonamento.getDataScadenza().isAfter(LocalDate.now())) {
+                                System.out.println("L'abbonamento con ID: " + abbonamento.getId() + " è valido fino al: " + abbonamento.getDataScadenza());
+                            } else {
+                                System.out.println("L'abbonamento con ID: " + abbonamento.getId() + " è scaduto.");
+                            }
+                        }
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un valore valido");
+                    scanner.next();
+                }
+            } else {
+                System.out.println("Inserire un numero valido");
+                scanner.next();
+            }
+        }
+    }
+
+    public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
+>>>>>>> Stashed changes
         String zonaDiPartenza = null;
         String capolinea = null;
         Timestamp tempoPrevisto = null;
@@ -348,9 +467,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        // Inizializza la lista vuota per i mezzi assegnati (se necessario)
-        // In questo esempio, la lista è vuota poiché non richiediamo dettagli sui mezzi
-        // Puoi implementare una logica più complessa per popolare questa lista se lo desideri.
+
 
         // Creazione dell'oggetto Tratta
         Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
@@ -358,6 +475,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         // Stampa l'oggetto creato
         System.out.println("Oggetto Tratta creato: " + tratta);
+        return tratta;
+
     }
 
     public static void creazioneStatoMezzo(Scanner scanner, Mezzo mezzo){
@@ -414,77 +533,65 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
 
-    public static void creazioneMezzo(){}
+    public static void creazioneMezzo(Scanner scanner){
+        String targa;
+        TipoMezzo tipoMezzo;
+        int capienza = 0;
+        Tratta trattaAssegnata;
 
 
-   /*  public static void creazioneElementoAdmin(Scanner scanner){
-        while(true){
-            System.out.println("Premi 1 per inserire un nuovo Mezzo");
-            //System.out.println("Premi 2 per inserire un nuovo Punto di Emissione");
-            System.out.println("Premi 2 per inserire un nuova Tratta");
-           //System.out.println("Premi 4 per creare un nuova Tessera");
-           // System.out.println("Premi 5 per creare un nuovo Abbonamento");
-            System.out.println("Premi 6 per creare un nuovo Biglietto");
-            System.out.println("Premi 0 per USCIRE");
-            System.out.print("Scegli un'opzione: ");
-            int scelta = -1;
+        while (true) {
+            try {
+                System.out.println("Inserisci il tipo di mezzo che vuoi creare: AUTOBUS, TRAM");
+                String sceltaMezzo = scanner.nextLine().toUpperCase();
+                tipoMezzo = TipoMezzo.valueOf(sceltaMezzo);
+                break;
+            } catch (IllegalArgumentException ex) {
+                System.out.println("Errore: Inserisci un valore valido (AUTOBUS, TRAM).");
+            }
+        }
+        while (true) {
+            try {
+                System.out.println("Inserisci una targa identificativa per il mezzo: ");
+                targa = scanner.nextLine();
+                if (!targa.isEmpty()) {
+                    break; // Esce dal ciclo se la targa non è vuota
+                } else {
+                    System.out.println("Errore: La targa non può essere vuota.");
+                }
+            } catch (InputMismatchException ex) {
+                System.out.println("Errore: Inserisci un valore valido.");
+                scanner.nextLine(); // Pulisce il buffer dello scanner
+            }
+        }
+
+        while(capienza <= 0){
             try{
-                scelta = scanner.nextInt();
-               scanner.nextLine();
-            }catch(InputMismatchException ex){
-               System.out.println("Inserisci un numero valido");
+                System.out.println("Inserisci la capienza del mezzo");
+                capienza = scanner.nextInt();
+                scanner.nextLine();
+                if(capienza > 29 & capienza < 50){
+                    break;
+                }
+            } catch(InputMismatchException ex ){
+                System.out.println("Inserire un valore valido");
+                scanner.next();
             }
-            switch(scelta){
-                case 1:
-                    TipoMezzo tipoMezzo = null;
-                    int capienza = 0;
-                    boolean statoManutenzione = false;
-                    int bigliettiValidati = 0;
-                    Tratta trattaAssegnata = null;
-
-                    while(tipoMezzo == null) {
-                        try {
-                            System.out.println("Inserisci il tipo di Mezzo: AUTOBUS, TRAM");
-                            String sceltaMezzo = scanner.nextLine();
-                            tipoMezzo = TipoMezzo.valueOf(sceltaMezzo);
-                        } catch (IllegalArgumentException ex) {
-                            System.out.println("Inserisci un valore valido");
-                        }
-                    }
-                    while(true) {
-                        try {
-                            System.out.println("Inserisci la capienza del Mezzo");
-                            capienza = scanner.nextInt();
-                            scanner.nextLine();
-                            if(capienza <=0) {
-                                System.out.println("La capienza deve essere maggiore di 0");
-                            }
-                            else break;
-
-                        }catch(InputMismatchException ex){
-                            System.out.println("Inserisci un valore valido");
-                        }
-                        while(true){
-                            try{
-                                System.out.println("Inserisci lo stato di manutenzione del mezzo: (true/false)");
-                                statoManutenzione = scanner.nextBoolean();
-                                break;
-                            } catch(InputMismatchException ex) {
-                                System.out.println("Inserisci un valore valido");
-                            }
-                        }
-
-                    }
-
-
-            }
-
-            }
+        }
+        trattaAssegnata = creazioneTratta(scanner, trattaDAO);
+        Mezzo mezzo = new Mezzo(tipoMezzo, targa, capienza, trattaAssegnata);
+        System.out.println("Mezzo creato correttamente: " + mezzo);
 
         }
-     }*/
-
-
-
     }
+
+
+
+
+
+
+<<<<<<< Updated upstream
+    }
+=======
+>>>>>>> Stashed changes
 

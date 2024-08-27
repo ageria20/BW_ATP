@@ -48,6 +48,8 @@ public class Mezzo {
     public Mezzo() {
     }
 
+
+
     public Mezzo(TipoMezzo tipoMezzo, int capienza, boolean statoManutenzione, int bigliettiValidati, List<PercorsoEffettuato> percorsiEffettuati, List<StatoMezzo> staotMezzo, Tratta trattaAssegnata) {
         this.tipoMezzo = tipoMezzo;
         this.capienza = capienza;
@@ -67,6 +69,13 @@ public class Mezzo {
         this.statoMezzo = statoMezzo;
         this.trattaAssegnata = trattaAssegnata;
         this.bigliettiVidimati = bigliettiVidimati;
+    }
+
+    public Mezzo(TipoMezzo tipoMezzo, String targa, int capienza, Tratta trattaAssegnata) {
+        this.tipoMezzo = tipoMezzo;
+        this.targa = targa;
+        this.capienza = capienza;
+        this.trattaAssegnata = trattaAssegnata;
     }
 
     public List<PercorsoEffettuato> getPercorsiEffettuati() {
