@@ -148,7 +148,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println(tessera);
     }
 
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO) {
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
@@ -195,7 +195,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 6:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
-                    vidimazzioneBiglietto(mezzoDAO,);
+                    vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
