@@ -93,4 +93,13 @@ public class Tessera {
                 ", utente= ID: " + utente.getId() +" di nome e cognome: "+utente.getNome()+" "+utente.getCognome()+", nato il: "+utente.getDataDiNascita()+
                 '}';
     }
+
+    public void rinnovoAutomatico() {
+        if (LocalDate.now().isAfter(dataScadenza)) {
+            dataScadenza = LocalDate.now().plusYears(1);
+            System.out.println("Tessera rinnovata. Nuova data di scadenza: " + dataScadenza);
+        } else {
+            System.out.println("La tessera è ancora valida fino al: " + dataScadenza);
+        }
+    }
 }
