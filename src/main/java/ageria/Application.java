@@ -15,6 +15,10 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class Application {
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
@@ -50,7 +54,7 @@ public class Application {
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD);
+                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD,bigliettoDAO,abbonamentoDAO);
                 break;
                case 2:
                    creazioneTratta(scanner, trattaDAO);
@@ -139,12 +143,13 @@ public class Application {
         System.out.println(tessera);
     }
 
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
-            System.out.println("Premi 1 per la creazione di un nuovo UTENTE e relativa TESSERA");
+            System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
             System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
             System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
+            System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
             System.out.println("Premi 0 per USCIRE");
             System.out.print("Scegli un'opzione: ");
             int sceltaUtente = -1;
@@ -166,13 +171,17 @@ public class Application {
                 case 2:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO);
+                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO,bigliettoDAO);
                     break;
                 case 3:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di un abbonamento");
-                    acquistoAbbonamento(scanner, tesseraDAO);
+                    acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
                     break;
+                case 4:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità abbonamento");
+                    verificaValiditàAbbonamento(scanner,abbonamentoDAO);
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -182,7 +191,7 @@ public class Application {
         }
     }
 
-    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
+    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,AbbonamentoDAO abbonamentoDAO) {
         boolean datavalida;
         LocalDate dataInizio;
         do {
@@ -316,10 +325,11 @@ public class Application {
             scanner.nextLine();
             Tessera tessera = tesseraDAO.findByID(numeroTessera);
             System.out.println("tessera: " + tessera);
-            Abbonamento abbonamento1 = new Abbonamento(tipoAbbonamento, dataInizio, dataScadenza, puntoEmissione, tessera);
+            Abbonamento abbonamento = new Abbonamento(tipoAbbonamento, dataInizio, dataScadenza, puntoEmissione, tessera);
+            abbonamentoDAO.save(abbonamento);
             System.out.println("Abbonamento creato con successo!");
 
-            System.out.println(abbonamento1);
+            System.out.println(abbonamento);
         } else {
             System.out.println("Non è stato selezionato un punto di emissione valido.");
         }
@@ -393,6 +403,38 @@ public class Application {
         } else {
             System.out.println("Non è stato selezionato un punto di emissione valido.");
         }
+    }
+
+    public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
+        long numeroTessera = -1;
+        while (numeroTessera == -1) {
+            System.out.println("Inserire il numero di tessera associato all'abbonamento: ");
+            if (scanner.hasNextLong()) {
+                try {
+                    numeroTessera = scanner.nextLong();
+                    List<Abbonamento> abbonamentiPresenti = abbonamentoDAO.findByNumeroTessera(numeroTessera);
+                    if (abbonamentiPresenti.isEmpty()) {
+                        System.out.println("Nessun abbonamento trovato per la tessera inserita.");
+                    } else {
+                        for (Abbonamento abbonamento : abbonamentiPresenti) {
+                            System.out.println(abbonamento);
+                            if (abbonamento.getDataScadenza().isAfter(LocalDate.now())) {
+                                System.out.println("L'abbonamento con ID: " + abbonamento.getId() + " è valido fino al: " + abbonamento.getDataScadenza());
+                            } else {
+                                System.out.println("L'abbonamento con ID: " + abbonamento.getId() + " è scaduto.");
+                            }
+                        }
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un valore valido");
+                    scanner.next();
+                }
+            } else {
+                System.out.println("Inserire un numero valido");
+                scanner.next();
+            }
+        }
+    }
 //     public static void creazioneElementoAdmin(int scelta){
 //        while(true){
 //            System.out.println("Premi 1 per inserire un nuovo Mezzo");
@@ -584,6 +626,6 @@ public class Application {
      }*/
 
 
-    }
+
 }
 
