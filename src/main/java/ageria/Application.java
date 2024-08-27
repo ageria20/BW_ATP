@@ -186,7 +186,7 @@ public class Application {
                 case 5:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto rinnovare l'abbonamento");
-                    rinnovoAbbonamento();
+                    rinnovoAbbonamento(scanner,tesseraDAO);
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -440,7 +440,7 @@ public class Application {
             }
         }
     }
-    public static void rinnovoAbbonamento(Scanner scanner,Tessera tessera,TesseraDAO tesseraDAO){
+    public static void rinnovoAbbonamento(Scanner scanner,TesseraDAO tesseraDAO){
 
         long numeroTessera=-1;
         while (numeroTessera == -1) {
