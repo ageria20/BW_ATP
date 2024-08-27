@@ -10,19 +10,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.lang.reflect.Member;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.*;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Application {
-private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
     private static EntityManager em = emf.createEntityManager();
     private static TrattaDAO trattaDAO = new TrattaDAO(em);
 
@@ -58,11 +55,11 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD,bigliettoDAO,abbonamentoDAO);
-                break;
-               case 2:
-                   creazioneTratta(scanner, trattaDAO);
-                   break;
+                    inputCreazione(scanner, utenteDAO, tesseraDAO, peD, bigliettoDAO, abbonamentoDAO);
+                    break;
+                case 2:
+                    creazioneTratta(scanner, trattaDAO);
+                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -147,7 +144,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println(tessera);
     }
 
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO) {
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
@@ -176,25 +173,25 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 2:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO,bigliettoDAO);
+                    acquistoBiglietto(scanner, tesseraDAO, puntodiEmissioneDAO, bigliettoDAO);
                     break;
                 case 3:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di un abbonamento");
-                    acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
+                    acquistoAbbonamento(scanner, tesseraDAO, puntodiEmissioneDAO, abbonamentoDAO);
                     break;
                 case 4:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità abbonamento");
-                    verificaValiditàAbbonamento(scanner,abbonamentoDAO);
+                    verificaValiditàAbbonamento(scanner, abbonamentoDAO);
                 case 5:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto rinnovare l'abbonamento");
-                    rinnovoAbbonamento(scanner,tesseraDAO);
+                    rinnovoAbbonamento(scanner, tesseraDAO);
                 case 6:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
-                    vidimazzioneBiglietto();
+                    //vidimazzioneBiglietto();
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -204,7 +201,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
 
-    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,AbbonamentoDAO abbonamentoDAO) {
+    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, AbbonamentoDAO abbonamentoDAO) {
         boolean datavalida;
         LocalDate dataInizio;
         do {
@@ -350,17 +347,17 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-    public static void vidimazzioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimato bigliettoVidimato, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner,BigliettoDAO bigliettoDAO,Biglietto biglietto) {
+    public static void vidimazzioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimato bigliettoVidimato, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner, BigliettoDAO bigliettoDAO, Biglietto biglietto) {
         while (true) {
             try {
                 System.out.println("Hai scelto di vidimare un biglietto, inserisci l'ID del biglietto per verificare che questa non sia già stata utilizzata");
-                long bigliettoID= scanner.nextLong();
-                Biglietto biglietto1=bigliettoDAO.findByID(bigliettoID);
+                long bigliettoID = scanner.nextLong();
+                Biglietto biglietto1 = bigliettoDAO.findByID(bigliettoID);
                 System.out.println("Inserisci la linea del mezzo in cui stai: ");
-                long mezzoID= scanner.nextLong();
-                Mezzo mezzo1=mezzoDAO.findByID(mezzoID);
-                LocalDateTime oraVidimazione=LocalDateTime.now();
-                BigliettoVidimato bigliettoVidimato1=new BigliettoVidimato(biglietto1,mezzo1,oraVidimazione);
+                long mezzoID = scanner.nextLong();
+                Mezzo mezzo1 = mezzoDAO.findByID(mezzoID);
+                LocalDateTime oraVidimazione = LocalDateTime.now();
+                BigliettoVidimato bigliettoVidimato1 = new BigliettoVidimato(biglietto1, mezzo1, oraVidimazione);
                 biglietto1.vidimazione();
             } catch (InputMismatchException e) {
                 System.out.println("inserisci un numero valido");
@@ -368,7 +365,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO) {
+
+    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO) {
         int numeroBiglietti = 0;
         boolean inputValido = false;
 
@@ -427,8 +425,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("Caricamento Biglietto/i in corso...");
             //Biglietto[] biglietti=new Biglietto[numeroBiglietti];
             for (int i = 0; i < numeroBiglietti; i++) {
-                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera,true);
-                 bigliettoDAO.save(biglietto);
+                Biglietto biglietto = new Biglietto(puntoEmissione, tessera, true);
+                bigliettoDAO.save(biglietto);
                 System.out.println("Biglietto " + (i + 1) + " creato.");
             }
         } else {
@@ -436,7 +434,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
 
-    public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
+    public static void verificaValiditàAbbonamento(Scanner scanner, AbbonamentoDAO abbonamentoDAO) {
         long numeroTessera = -1;
         while (numeroTessera == -1) {
             System.out.println("Inserire il numero di tessera associato all'abbonamento: ");
@@ -466,15 +464,16 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public static void rinnovoAbbonamento(Scanner scanner,TesseraDAO tesseraDAO){
 
-        long numeroTessera=-1;
+    public static void rinnovoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO) {
+
+        long numeroTessera = -1;
         while (numeroTessera == -1) {
             System.out.println("Inserisci ID tessera da rinnovare: ");
             if (scanner.hasNextLong()) {
                 try {
                     numeroTessera = scanner.nextLong();
-                    Tessera tesseraRinnovo=tesseraDAO.findByID(numeroTessera);
+                    Tessera tesseraRinnovo = tesseraDAO.findByID(numeroTessera);
                     tesseraRinnovo.rinnovoAutomatico();
                 } catch (InputMismatchException e) {
                     System.out.println("Inserisci un valore valido");
@@ -487,7 +486,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
 
-    public static void creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
+    public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO) {
         String zonaDiPartenza = null;
         String capolinea = null;
         Timestamp tempoPrevisto = null;
@@ -535,8 +534,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-    public static void creazioneStatoMezzo(Scanner scanner, Mezzo mezzo){
-         // Presupponiamo che l'oggetto Mezzo esista già e sia stato inizializzato
+    public static void creazioneStatoMezzo(Scanner scanner, Mezzo mezzo) {
+        // Presupponiamo che l'oggetto Mezzo esista già e sia stato inizializzato
         Manutenzione stato = null;
         LocalDate dataInizio = null;
         LocalDate dataFine = null;
@@ -589,7 +588,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
 
-    public static void creazioneMezzo(Scanner scanner){
+    public static void creazioneMezzo(Scanner scanner) {
         String targa;
         TipoMezzo tipoMezzo;
         int capienza = 0;
@@ -621,15 +620,15 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        while(capienza <= 0){
-            try{
+        while (capienza <= 0) {
+            try {
                 System.out.println("Inserisci la capienza del mezzo");
                 capienza = scanner.nextInt();
                 scanner.nextLine();
-                if(capienza > 29 & capienza < 50){
+                if (capienza > 29 & capienza < 50) {
                     break;
                 }
-            } catch(InputMismatchException ex ){
+            } catch (InputMismatchException ex) {
                 System.out.println("Inserire un valore valido");
                 scanner.next();
             }
@@ -638,8 +637,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         Mezzo mezzo = new Mezzo(tipoMezzo, targa, capienza, trattaAssegnata);
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
-        }
     }
+}
 
 
 
