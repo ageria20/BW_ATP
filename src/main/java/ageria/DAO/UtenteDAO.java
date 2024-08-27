@@ -35,4 +35,5 @@ public class UtenteDAO {
         transaction.commit();
         System.out.println("l'utente con ID: "+ id +" è stato rimosso correttamente");
     }
+
 }

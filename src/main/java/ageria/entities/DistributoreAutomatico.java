@@ -12,8 +12,8 @@ public class DistributoreAutomatico extends PuntodiEmissione{
 @Column(name = "stato")
 private boolean inFunzione;
 
-    public DistributoreAutomatico(String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, boolean inFunzione) {
-        super(nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
+    public DistributoreAutomatico(String nome, String indirizzo, boolean inFunzione) {
+        super(nome, indirizzo);
         this.inFunzione = inFunzione;
     }
 

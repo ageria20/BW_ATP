@@ -10,8 +10,8 @@ public class RivenditoreAutorizzato extends PuntodiEmissione {
     @Enumerated(EnumType.STRING)
     private RivenditoreType tipo;
 
-    public RivenditoreAutorizzato(String nome, String indirizzo, Biglietto bigliettiEmessi, Abbonamento abbonamentiEmessi, RivenditoreType tipo) {
-        super(nome, indirizzo, bigliettiEmessi, abbonamentiEmessi);
+    public RivenditoreAutorizzato(String nome, String indirizzo, RivenditoreType tipo) {
+        super(nome, indirizzo);
         this.tipo = tipo;
     }
 

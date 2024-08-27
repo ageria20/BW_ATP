@@ -35,4 +35,5 @@ public class TesseraDAO {
         transaction.commit();
         System.out.println("la tessera con ID: "+ id +" è stato rimossa correttamente");
     }
+
 }
