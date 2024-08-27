@@ -15,19 +15,19 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class Application {
-private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         EntityManager em = emf.createEntityManager();
         //qui mettiamo i DAO
-        PuntodiEmissioneDAO peD=new PuntodiEmissioneDAO(em);
-        AbbonamentoDAO abbonamentoDAO=new AbbonamentoDAO(em);
-        BigliettoDAO bigliettoDAO=new BigliettoDAO(em);
-        TesseraDAO tesseraDAO=new TesseraDAO(em);
-        TrattaDAO trattaDAO=new TrattaDAO(em);
-        MezzoDAO mezzoDAO=new MezzoDAO(em);
-        UtenteDAO utenteDAO=new UtenteDAO(em);
+        PuntodiEmissioneDAO peD = new PuntodiEmissioneDAO(em);
+        AbbonamentoDAO abbonamentoDAO = new AbbonamentoDAO(em);
+        BigliettoDAO bigliettoDAO = new BigliettoDAO(em);
+        TesseraDAO tesseraDAO = new TesseraDAO(em);
+        TrattaDAO trattaDAO = new TrattaDAO(em);
+        MezzoDAO mezzoDAO = new MezzoDAO(em);
+        UtenteDAO utenteDAO = new UtenteDAO(em);
 
         //qui cominciamo con lo scanner
 
@@ -48,9 +48,9 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner,utenteDAO,tesseraDAO);
-               case 2:
-                   break;
+                    inputCreazione(scanner, utenteDAO, tesseraDAO);
+                case 2:
+                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -61,19 +61,20 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             em.close();
             emf.close();
         }
-     }
-    public static void creazioneUtenteTessera(Scanner scanner,UtenteDAO utenteDAO,TesseraDAO tesseraDAO ){
+    }
+
+    public static void creazioneUtenteTessera(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO) {
         System.out.println("------------------------------------------------------");
-        String nome="uno";
-        while (nome.equals("uno")){
+        String nome = "uno";
+        while (nome.equals("uno")) {
             System.out.println("Inserisci nome: ");
-            nome=scanner.nextLine();
+            nome = scanner.nextLine();
         }
 
-        String cognome= "cognome";
-        while (cognome.equals("cognome")){
+        String cognome = "cognome";
+        while (cognome.equals("cognome")) {
             System.out.println("Inserisci Cognome:");
-            cognome= scanner.nextLine();
+            cognome = scanner.nextLine();
         }
         int anno = -1;
         while (true) {
@@ -120,22 +121,22 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 scanner.nextLine();
             }
         }
-        LocalDate date=LocalDate.of(anno,mese,giorno);
-        Utente utente=new Utente(nome,cognome,date);
-        System.out.println("Utente con ID: "+ utente.getId()+" generato con successo!");
+        LocalDate date = LocalDate.of(anno, mese, giorno);
+        Utente utente = new Utente(nome, cognome, date);
+        System.out.println("Utente con ID: " + utente.getId() + " generato con successo!");
         utenteDAO.save(utente);
 
         System.out.println("Creazione Tessera personale in corso...");
-        Tessera tessera=new Tessera(utente);
-        System.out.println("Creazione Tessera con ID: "+tessera.getNumeroTessera() +" creata con successo!");
-        System.out.println("Data di emissione: "+tessera.getDataEmissione()+", scade il: "+tessera.getDataScadenza());
+        Tessera tessera = new Tessera(utente);
+        System.out.println("Creazione Tessera con ID: " + tessera.getNumeroTessera() + " creata con successo!");
+        System.out.println("Data di emissione: " + tessera.getDataEmissione() + ", scade il: " + tessera.getDataScadenza());
         tesseraDAO.save(tessera);
         System.out.println(utente);
         System.out.println(tessera);
     }
 
-    public static void inputCreazione( Scanner scanner,UtenteDAO utenteDAO,TesseraDAO tesseraDAO){
-        while (true){
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO) {
+        while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per la creazione di un nuovo UTENTE e relativa TESSERA");
             System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
@@ -146,26 +147,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             try {
                 sceltaUtente = scanner.nextInt();
                 scanner.nextLine();
-                if(sceltaUtente == -1) break;
+                if (sceltaUtente == -1) break;
             } catch (InputMismatchException e) {
                 System.out.println("Inserisci un numero valido!");
                 scanner.nextLine();
                 continue;
             }
-            switch (sceltaUtente){
+            switch (sceltaUtente) {
                 case 1:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
-                    creazioneUtenteTessera(scanner,utenteDAO,tesseraDAO);
+                    creazioneUtenteTessera(scanner, utenteDAO, tesseraDAO);
                     break;
                 case 2:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
+                    acquistoBiglietto(scanner, tesseraDAO,);
                     break;
                 case 3:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di un abbonamento");
-                    acquistoAbbonamento(scanner,tesseraDAO);
+                    acquistoAbbonamento(scanner, tesseraDAO);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -176,7 +178,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
 
-    public static void acquistoAbbonamento(Scanner scanner,TesseraDAO tesseraDAO){
+    public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO) {
         boolean datavalida;
         LocalDate dataInizio;
         do {
@@ -241,9 +243,9 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             dataInizio = LocalDate.of(annoInizio, meseInizio, giornoInizio);
             if (dataInizio.isBefore(LocalDate.now())) {
                 System.out.println("la data di Inizio non può essere precedente alla data odierna, inserisci una nuova data di Inizio per favore");
-                datavalida=false;
-            }else {
-                datavalida=true;
+                datavalida = false;
+            } else {
+                datavalida = true;
             }
 
         } while (!datavalida);
@@ -304,11 +306,11 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         if (puntoEmissione != null) {
             System.out.println("Inserisci numero di tessera dove attivare l'abbonamento scelto: ");
-           long numeroTessera = scanner.nextLong();
+            long numeroTessera = scanner.nextLong();
             scanner.nextLine();
-            Tessera tessera=tesseraDAO.findByID(numeroTessera);
-            System.out.println("tessera: "+tessera);
-            Abbonamento abbonamento1 = new Abbonamento(tipoAbbonamento,dataInizio,dataScadenza,puntoEmissione,tessera);
+            Tessera tessera = tesseraDAO.findByID(numeroTessera);
+            System.out.println("tessera: " + tessera);
+            Abbonamento abbonamento1 = new Abbonamento(tipoAbbonamento, dataInizio, dataScadenza, puntoEmissione, tessera);
             System.out.println("Abbonamento creato con successo!");
 
             System.out.println(abbonamento1);
@@ -317,8 +319,79 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
 
 
-
     }
+
+    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO) {
+        System.out.println("Hai scelto di acquistare uno o più biglietti");
+
+        int numeroBiglietti = 0;
+        boolean inputValido = false;
+
+        while (!inputValido) {
+            System.out.println("Quanti biglietti vuoi acquistare?");
+            try {
+                numeroBiglietti = scanner.nextInt();
+                if (numeroBiglietti <= 0) {
+                    System.out.println("Il numero di biglietti deve essere maggiore di zero.");
+                } else {
+                    inputValido = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido");
+                scanner.next();
+            }
+        }
+
+        System.out.println("Ora mi serve sapere il numero di tessera su cui caricare il numero di biglietti (" + numeroBiglietti + ") richiesti");
+
+        PuntodiEmissione puntoEmissione = null;
+        inputValido = false;
+
+        while (!inputValido) {
+            System.out.println("Ora inserisci da dove stai acquistando:");
+            System.out.println("Premi 1 se dal punto autorizzato");
+            System.out.println("Premi 2 se dal distributore automatico");
+
+            try {
+                if (scanner.hasNextInt()) {
+                    int sceltaPunto = scanner.nextInt();
+                    if (sceltaPunto == 1) {
+                        puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
+                        inputValido = true;
+                    } else if (sceltaPunto == 2) {
+                        puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
+                        inputValido = true;
+                    } else {
+                        System.out.println("Inserire un valore valido");
+                    }
+                } else {
+                    System.out.println("Errore: inserisci un numero valido");
+                    scanner.next();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero valido");
+                scanner.next();
+            }
+        }
+
+        if (puntoEmissione != null) {
+            System.out.println("Inserisci numero di tessera dove caricare i biglietti: ");
+            long numeroTessera = scanner.nextLong();
+            scanner.nextLine();
+            Tessera tessera = tesseraDAO.findByID(numeroTessera);
+            System.out.println("tessera: " + tessera);
+
+            System.out.println("Caricamento Biglietto/i in corso...");
+            Biglietto[] biglietti=new Biglietto[numeroBiglietti];
+            for (int i = 0; i < numeroBiglietti; i++) {
+                biglietti[i] = new Biglietto(puntoEmissione, tessera);
+                System.out.println("Biglietto " + (i + 1) + " creato.");
+            }
+            System.out.println(tessera);
+        } else {
+            System.out.println("Non è stato selezionato un punto di emissione valido.");
+        }
+        System.out.println(tessera);
 
 //     public static void creazioneElementoAdmin(int scelta){
 //        while(true){
@@ -342,6 +415,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 //     }
 
 
-
     }
+}
 
