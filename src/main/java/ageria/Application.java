@@ -359,7 +359,7 @@ public class Application {
                 scanner.nextLine();
             }
         }
-
+    }
     public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO) {
         int numeroBiglietti = 0;
         boolean inputValido = false;
@@ -477,7 +477,6 @@ public class Application {
                 scanner.next();
             }
         }
-        tessera.rinnovoAutomatico();
     }
 
 //     public static void creazioneElementoAdmin(int scelta){
