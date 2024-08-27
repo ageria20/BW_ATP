@@ -35,6 +35,12 @@ public class Tratta {
         this.tempoPrevisto = tempoPrevisto;
         this.mezziAssegnati = mezziAssegnati;
     }
+    public Tratta(String zonaDiPartenza, String capolinea, Timestamp tempoPrevisto) {
+        this.zonaDiPartenza = zonaDiPartenza;
+        this.capolinea = capolinea;
+        this.tempoPrevisto = tempoPrevisto;
+
+    }
 
     public long getId() {
         return id;
