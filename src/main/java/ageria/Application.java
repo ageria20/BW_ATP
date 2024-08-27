@@ -48,7 +48,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner,tesseraDAO);
+                    inputCreazione(scanner,utenteDAO,tesseraDAO);
                case 2:
                    break;
                 case 0:
@@ -62,7 +62,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             emf.close();
         }
      }
-    public static void creazioneUtenteTessera(Scanner scanner){
+    public static void creazioneUtenteTessera(Scanner scanner,UtenteDAO utenteDAO,TesseraDAO tesseraDAO ){
         System.out.println("------------------------------------------------------");
         String nome="uno";
         while (nome.equals("uno")){
@@ -123,18 +123,18 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         LocalDate date=LocalDate.of(anno,mese,giorno);
         Utente utente=new Utente(nome,cognome,date);
         System.out.println("Utente con ID: "+ utente.getId()+" generato con successo!");
-        //utenteDAO.save(utente);
+        utenteDAO.save(utente);
 
         System.out.println("Creazione Tessera personale in corso...");
         Tessera tessera=new Tessera(utente);
         System.out.println("Creazione Tessera con ID: "+tessera.getNumeroTessera() +" creata con successo!");
         System.out.println("Data di emissione: "+tessera.getDataEmissione()+", scade il: "+tessera.getDataScadenza());
-        //tesseraDAO.save(tessera);
+        tesseraDAO.save(tessera);
         System.out.println(utente);
         System.out.println(tessera);
     }
 
-    public static void inputCreazione( Scanner scanner,TesseraDAO tesseraDAO){
+    public static void inputCreazione( Scanner scanner,UtenteDAO utenteDAO,TesseraDAO tesseraDAO){
         while (true){
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per la creazione di un nuovo UTENTE e relativa TESSERA");
@@ -156,7 +156,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 1:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
-                    creazioneUtenteTessera(scanner);
+                    creazioneUtenteTessera(scanner,utenteDAO,tesseraDAO);
                     break;
                 case 2:
                     System.out.println("-------------------------------------------------");
@@ -177,89 +177,98 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     }
 
     public static void acquistoAbbonamento(Scanner scanner,TesseraDAO tesseraDAO){
-        int annoInizio=LocalDate.now().getYear()-1;
-        while (annoInizio<LocalDate.now().getYear()){
-            System.out.println("Inserisci l'anno da cui Inizierà l'abbonamento: ");
-            try{
-                if(scanner.hasNext()){
-                    annoInizio= scanner.nextInt();
-                }if(annoInizio>=LocalDate.now().getYear()){
-                    break;
-                }else {
-                    System.out.println("Errore: l'anno non può essere precedente all'anno corrente, inserisci un anno valido");
-                }
-            }catch (InputMismatchException e){
-                System.out.println("Inserisci un anno valido");
-                scanner.nextLine();
-            }
-        }
-        int meseInizio = -1;
-        while (meseInizio == -1) {
-            System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
-            try {
-                if (scanner.hasNextInt()) {
-                    int input = scanner.nextInt();
-                    if (input >= 1 && input <= 12) {
-                        meseInizio = input;
-                    } else {
-                        System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+        boolean datavalida;
+        LocalDate dataInizio;
+        do {
+            int annoInizio = LocalDate.now().getYear() - 1;
+            while (annoInizio < LocalDate.now().getYear()) {
+                System.out.println("Inserisci l'anno da cui Inizierà l'abbonamento: ");
+                try {
+                    if (scanner.hasNext()) {
+                        annoInizio = scanner.nextInt();
                     }
-                } else {
+                    if (annoInizio >= LocalDate.now().getYear()) {
+                        break;
+                    } else {
+                        System.out.println("Errore: l'anno non può essere precedente all'anno corrente, inserisci un anno valido");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un anno valido");
+                    scanner.nextLine();
+                }
+            }
+            int meseInizio = -1;
+            while (meseInizio == -1) {
+                System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+                try {
+                    if (scanner.hasNextInt()) {
+                        int input = scanner.nextInt();
+                        if (input >= 1 && input <= 12) {
+                            meseInizio = input;
+                        } else {
+                            System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+                        }
+                    } else {
+                        System.out.println("Inserisci un mese (numerico) valido");
+                        scanner.next();
+                    }
+                } catch (InputMismatchException e) {
                     System.out.println("Inserisci un mese (numerico) valido");
                     scanner.next();
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("Inserisci un mese (numerico) valido");
-                scanner.next();
             }
-        }
 
-        int giornoInizio = -1;
-        while (giornoInizio == -1) {
-            System.out.println("Inserisci il giorno in formato numerico (da 1 a 31): ");
-            try {
-                if (scanner.hasNextInt()) {
-                    int input = scanner.nextInt();
-                    if (input >= 1 && input <= 31) {
-                        giornoInizio = input;
+            int giornoInizio = -1;
+            while (giornoInizio == -1) {
+                System.out.println("Inserisci il giorno in formato numerico (da 1 a 31): ");
+                try {
+                    if (scanner.hasNextInt()) {
+                        int input = scanner.nextInt();
+                        if (input >= 1 && input <= 31) {
+                            giornoInizio = input;
+                        } else {
+                            System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+                        }
                     } else {
-                        System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+                        System.out.println("Inserisci un giorno (numerico) valido");
+                        scanner.next();
                     }
-                } else {
-                    System.out.println("Inserisci un giorno (numerico) valido");
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un numero valido");
                     scanner.next();
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("Inserisci un numero valido");
-                scanner.next();
             }
-        }
-        LocalDate dataInizio= LocalDate.of(annoInizio,meseInizio,giornoInizio);
-        LocalDate dataScadenza=null;
+            dataInizio = LocalDate.of(annoInizio, meseInizio, giornoInizio);
+            if (dataInizio.isBefore(LocalDate.now())) {
+                System.out.println("la data di Inizio non può essere precedente alla data odierna, inserisci una nuova data di Inizio per favore");
+                datavalida=false;
+            }else {
+                datavalida=true;
+            }
 
-        System.out.println("Che tipo di abbonamento hai intenzione di acquistare?");
-        System.out.println("Premi 1 per quello Settimanale");
-        System.out.println("Premi 2 per quello Mensile");
+        } while (!datavalida);
+        LocalDate dataScadenza = null;
         AbbonamentoType tipoAbbonamento = null;
-        try {
-            if (scanner.hasNextInt()) {
+        while (tipoAbbonamento == null) {
+            System.out.println("Che tipo di abbonamento hai intenzione di acquistare?");
+            System.out.println("Premi 1 per quello Settimanale");
+            System.out.println("Premi 2 per quello Mensile");
+
+            try {
                 int sceltaAbbonamento = scanner.nextInt();
                 if (sceltaAbbonamento == 1) {
                     tipoAbbonamento = AbbonamentoType.SETTIMANALE;
-                    dataScadenza=dataInizio.plusWeeks(1);
+                    dataScadenza = dataInizio.plusWeeks(1);
                 } else if (sceltaAbbonamento == 2) {
                     tipoAbbonamento = AbbonamentoType.MENSILE;
-                    dataScadenza=dataInizio.plusMonths(1);
+                    dataScadenza = dataInizio.plusMonths(1);
                 } else {
                     System.out.println("Inserire un valore valido");
                 }
-            } else {
+            } catch (InputMismatchException e) {
                 System.out.println("Errore: inserisci un numero valido");
                 scanner.nextLine();
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Errore: inserisci un numero valido");
-            scanner.nextLine();
         }
 
         if (tipoAbbonamento != null) {
