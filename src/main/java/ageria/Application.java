@@ -59,7 +59,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD,bigliettoDAO,abbonamentoDAO);
+                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD,bigliettoDAO,abbonamentoDAO,mezzoDAO,bigliettoVidimatoDAO);
                 break;
                case 2:
                    creazioneTratta(scanner, trattaDAO);
@@ -156,6 +156,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
             System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
             System.out.println("Premi 5 per RINNOVARE la TESSERA scaduta");
+            System.out.println("Premi 6 per VIDIMARE il biglietto");
             System.out.println("Premi 0 per USCIRE");
             System.out.print("Scegli un'opzione: ");
             int sceltaUtente = -1;
