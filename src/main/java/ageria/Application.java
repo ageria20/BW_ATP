@@ -579,7 +579,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
            }
         }
     }
-    private static LocalDate recuperaData(Scanner scanner, String tipo) {
+    public static LocalDate recuperaData(Scanner scanner, String tipo) {
         int anno = -1, mese = -1, giorno = -1;
 
         while (true) {
@@ -712,7 +712,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     Long conteggioAbbonamenti=puntodiEmissioneDAO.countAbbonamentiEmessiInPeriodo(puntoEmissioneID,dateInizio,dateFine);
     Long conteggioBiglietti=puntodiEmissioneDAO.countAbbonamentiEmessiInPeriodo(puntoEmissioneID,dateInizio,dateFine);
-    Long Totale=conteggioBiglietti+conteggioBiglietti;
+    Long Totale=conteggioBiglietti+conteggioAbbonamenti;
     System.out.println("Gli ABBONAMENTI e BIGLIETTI TOTALI presenti in quel periodo sono: "+Totale+"!");
 }
 
