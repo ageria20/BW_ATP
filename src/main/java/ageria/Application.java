@@ -720,7 +720,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     Long Totale=conteggioBiglietti+conteggioAbbonamenti;
     System.out.println("Gli ABBONAMENTI e BIGLIETTI TOTALI presenti in quel periodo sono: "+Totale+"!");
 }
-public static void conteggioBigliettiVidimatiSuUnMezzo(Scanner scanner,MezzoDAO mezzoDAO){
+    public static void conteggioBigliettiVidimatiSuUnMezzo(Scanner scanner,MezzoDAO mezzoDAO){
     long mezzoID=-1;
     while (mezzoID == -1) {
         System.out.println("Inserisci ID del MEZZO: ");
@@ -892,7 +892,7 @@ public static void conteggioBigliettiVidimatiSuUnMezzo(Scanner scanner,MezzoDAO 
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
     }
-    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,MezzoDAO mezzoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per CREARE una nuova TRATTA");
@@ -924,7 +924,7 @@ public static void conteggioBigliettiVidimatiSuUnMezzo(Scanner scanner,MezzoDAO 
                 case 3:
                     System.out.println("------------------------------------------------------");
                     System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
-                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO);
+                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO,mezzoDAO);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
