@@ -63,7 +63,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     break;
 
                 case 2:
-                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD);
+                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
