@@ -11,7 +11,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.lang.reflect.Member;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Application {
@@ -61,13 +59,11 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner, utenteDAO, tesseraDAO, peD, bigliettoDAO, abbonamentoDAO, mezzoDAO, bigliettoVidimatoDAO);
+                    inputUtente(scanner, utenteDAO, tesseraDAO, peD, bigliettoDAO, abbonamentoDAO, mezzoDAO, bigliettoVidimatoDAO);
                     break;
 
                 case 2:
-                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO);
-
-
+                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -80,7 +76,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             emf.close();
         }
     }
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
+    public static void inputUtente(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
@@ -874,7 +870,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
     }
-    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("premi 1 per CREARE una nuova TRATTA");
@@ -902,7 +898,16 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     System.out.println("scelta della tratta in corso...");
                     selezioneTrattaEModificaTE(scanner, trattaDAO, percorsoEffettuatoDAO);
                     break;
-
+                case 3:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
+                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO);
+                    break;
+                case 0:
+                    System.out.println("Chiusura in corso...");
+                    return;
+                default:
+                    System.out.println("Opzione non valida. Riprova.");
             }
         }
     }
