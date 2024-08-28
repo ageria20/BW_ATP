@@ -11,15 +11,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.lang.reflect.Member;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.*;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class Application {
@@ -119,7 +116,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 5:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto rinnovare l'abbonamento");
-                    rinnovoAbbonamento(scanner,tesseraDAO);
+                    rinnovoTessera(scanner,tesseraDAO);
                 case 6:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
@@ -488,8 +485,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public static void rinnovoAbbonamento(Scanner scanner,TesseraDAO tesseraDAO){
-
+    public static void rinnovoTessera(Scanner scanner, TesseraDAO tesseraDAO){
         long numeroTessera=-1;
         while (numeroTessera == -1) {
             System.out.println("Inserisci ID tessera da rinnovare: ");
@@ -536,10 +532,401 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         }
     }
+    public static void monitoraggioNBigliettiAbbonamenti (Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO) {
+        while (true) {
+            System.out.println("Premi 1 per MONITORARE i BIGLIETTI emessi in un determinato periodo");
+            System.out.println("Premi 2 per MONITORARE gli ABBONAMENTI emessi in un determinato periodo");
+            System.out.println("Premi 3 per MONITORARE il TOTALE BIGLIETTI/ABBONAMENTI emessi in un determinato periodo");
+            System.out.println("Premi 4 per MONITORARE i BIGLIETTI VIDIMATI in un determinato periodo");
+            System.out.println("Premi 0 per USCIRE");
+            System.out.print("Scegli un'opzione: ");
+            int sceltaUtente = -1;
+            try {
+                 sceltaUtente = scanner.nextInt();
+                 scanner.nextLine();
+                 if (sceltaUtente == -1) break;
+            } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+            continue;
+            }
+           switch (sceltaUtente) {
+              case 1:
+                System.out.println("-------------------------------------------------");
+                  conteggioBigliettiEmessi(scanner,puntodiEmissioneDAO);
+                break;
+              case 2:
+                System.out.println("-------------------------------------------------");
+                  conteggioAbbonamentiEmessi(scanner,puntodiEmissioneDAO);
+                break;
+              case 3:
+                System.out.println("-------------------------------------------------");
+                  conteggioBigliettiEAbbonamentiTotali(scanner,puntodiEmissioneDAO);
+                break;
+              case 4:
+                System.out.println("-------------------------------------------------");
 
-    public static void monitoraggioNBigliettiAbbonamentiTotale (Scanner scanner) {
 
+              case 0:
+                System.out.println("Chiusura in corso...");
+                return;
+              default:
+                System.out.println("Opzione non valida. Riprova.");
+           }
+        }
     }
+    public static void conteggioBigliettiEmessi(Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO){
+        long puntoEmissioneID=-1;
+        while (puntoEmissioneID == -1) {
+            System.out.println("Inserisci ID del punto di Emissione: ");
+            if (scanner.hasNextLong()) {
+                try {
+                    puntoEmissioneID = scanner.nextLong();
+                    PuntodiEmissione punto1=puntodiEmissioneDAO.findByID(puntoEmissioneID);
+                    System.out.println("Il punto di emissione selezionato è: "+punto1.getId()+" di nome "+punto1.getNome());
+
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un valore valido");
+                    scanner.next();
+                }
+            } else {
+                System.out.println("Inserire un numero valido");
+                scanner.next();
+            }
+        }
+        int annoInzio = -1;
+        while (true) {
+            System.out.println("Inserisci l'anno: ");
+            try {
+                annoInzio = scanner.nextInt();
+                if (annoInzio >= LocalDate.now().getYear() - 90 && annoInzio <= LocalDate.now().getYear()){
+                    break;
+                }else{
+                    System.out.println("Errore: l'anno deve essere compreso tra " + (LocalDate.now().getYear() - 90) + " e " + (LocalDate.now().getYear()));
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+            }
+        }
+        int meseInizio = -1;
+        while (true) {
+            System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+            try {
+                meseInizio = scanner.nextInt();
+                if (meseInizio >= 1 && meseInizio <= 12) {
+                    break;
+                } else {
+                    System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+            }
+        }
+        int giornoInizio = -1;
+        while (true) {
+            System.out.println("Inserisci il giorno di nascita in formato numerico: ");
+            try {
+                giornoInizio = scanner.nextInt();
+                if (giornoInizio >= 1 && giornoInizio <= 31) {
+                    break;
+                } else {
+                    System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+            }
+        }
+        LocalDate dateInizio = LocalDate.of(annoInzio, meseInizio, giornoInizio);
+        System.out.println("Data Inizio: "+dateInizio+" inserita con successo!");
+        int annoFine = -1;
+        while (true) {
+            System.out.println("Inserisci l'anno: ");
+            try {
+                annoFine = scanner.nextInt();
+                if (annoFine >= LocalDate.now().getYear() - 90 && annoFine <= LocalDate.now().getYear()){
+                    break;
+                }else{
+                    System.out.println("Errore: l'anno deve essere compreso tra " + (LocalDate.now().getYear() - 90) + " e " + (LocalDate.now().getYear()));
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+            }
+        }
+        int meseFine = -1;
+        while (true) {
+            System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+            try {
+                meseFine = scanner.nextInt();
+                if (meseFine >= 1 && meseFine <= 12) {
+                    break;
+                } else {
+                    System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+            }
+        }
+        int giornoFine = -1;
+        while (true) {
+            System.out.println("Inserisci il giorno di nascita in formato numerico: ");
+            try {
+                giornoFine = scanner.nextInt();
+                if (giornoFine >= 1 && giornoFine <= 31) {
+                    break;
+                } else {
+                    System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+            }
+        }
+        LocalDate dateFine = LocalDate.of(annoFine, meseInizio, giornoFine);
+        System.out.println("Data Fine: "+dateFine+" inserita con successo!");
+        Long conteggioBiglietti=puntodiEmissioneDAO.countBigliettiEmessiInPeriodo(puntoEmissioneID,dateInizio,dateFine);
+        System.out.println("I biglietti presenti in periodo è: "+conteggioBiglietti+"!");
+}
+    public static void conteggioAbbonamentiEmessi(Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO){
+    long puntoEmissioneID=-1;
+    while (puntoEmissioneID == -1) {
+        System.out.println("Inserisci ID del punto di Emissione: ");
+        if (scanner.hasNextLong()) {
+            try {
+                puntoEmissioneID = scanner.nextLong();
+                PuntodiEmissione punto1=puntodiEmissioneDAO.findByID(puntoEmissioneID);
+                System.out.println("Il punto di emissione selezionato è: "+punto1.getId()+" di nome "+punto1.getNome());
+
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un valore valido");
+                scanner.next();
+            }
+        } else {
+            System.out.println("Inserire un numero valido");
+            scanner.next();
+        }
+    }
+    int annoInzio = -1;
+    while (true) {
+        System.out.println("Inserisci l'anno: ");
+        try {
+            annoInzio = scanner.nextInt();
+            if (annoInzio >= LocalDate.now().getYear() - 90 && annoInzio <= LocalDate.now().getYear()){
+                break;
+            }else{
+                System.out.println("Errore: l'anno deve essere compreso tra " + (LocalDate.now().getYear() - 90) + " e " + (LocalDate.now().getYear()));
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int meseInizio = -1;
+    while (true) {
+        System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+        try {
+            meseInizio = scanner.nextInt();
+            if (meseInizio >= 1 && meseInizio <= 12) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int giornoInizio = -1;
+    while (true) {
+        System.out.println("Inserisci il giorno di nascita in formato numerico: ");
+        try {
+            giornoInizio = scanner.nextInt();
+            if (giornoInizio >= 1 && giornoInizio <= 31) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    LocalDate dateInizio = LocalDate.of(annoInzio, meseInizio, giornoInizio);
+    System.out.println("Data Inizio: "+dateInizio+" inserita con successo!");
+    int annoFine = -1;
+    while (true) {
+        System.out.println("Inserisci l'anno: ");
+        try {
+            annoFine = scanner.nextInt();
+            if (annoFine >= LocalDate.now().getYear() - 90 && annoFine <= LocalDate.now().getYear()){
+                break;
+            }else{
+                System.out.println("Errore: l'anno deve essere compreso tra " + (LocalDate.now().getYear() - 90) + " e " + (LocalDate.now().getYear()));
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int meseFine = -1;
+    while (true) {
+        System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+        try {
+            meseFine = scanner.nextInt();
+            if (meseFine >= 1 && meseFine <= 12) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int giornoFine = -1;
+    while (true) {
+        System.out.println("Inserisci il giorno di nascita in formato numerico: ");
+        try {
+            giornoFine = scanner.nextInt();
+            if (giornoFine >= 1 && giornoFine <= 31) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    LocalDate dateFine = LocalDate.of(annoFine, meseInizio, giornoFine);
+    System.out.println("Data Fine: "+dateFine+" inserita con successo!");
+    Long conteggioAbbonamenti=puntodiEmissioneDAO.countAbbonamentiEmessiInPeriodo(puntoEmissioneID,dateInizio,dateFine);
+    System.out.println("Gli ABBONAMENTI presenti in quel periodo sono: "+conteggioAbbonamenti+"!");
+}
+    public static void conteggioBigliettiEAbbonamentiTotali(Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO){
+    long puntoEmissioneID=-1;
+    while (puntoEmissioneID == -1) {
+        System.out.println("Inserisci ID del punto di Emissione: ");
+        if (scanner.hasNextLong()) {
+            try {
+                puntoEmissioneID = scanner.nextLong();
+                PuntodiEmissione punto1=puntodiEmissioneDAO.findByID(puntoEmissioneID);
+                System.out.println("Il punto di emissione selezionato è: "+punto1.getId()+" di nome "+punto1.getNome());
+
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un valore valido");
+                scanner.next();
+            }
+        } else {
+            System.out.println("Inserire un numero valido");
+            scanner.next();
+        }
+    }
+    int annoInzio = -1;
+    while (true) {
+        System.out.println("Inserisci l'anno: ");
+        try {
+            annoInzio = scanner.nextInt();
+            if (annoInzio >= LocalDate.now().getYear() - 90 && annoInzio <= LocalDate.now().getYear()){
+                break;
+            }else{
+                System.out.println("Errore: l'anno deve essere compreso tra " + (LocalDate.now().getYear() - 90) + " e " + (LocalDate.now().getYear()));
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int meseInizio = -1;
+    while (true) {
+        System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+        try {
+            meseInizio = scanner.nextInt();
+            if (meseInizio >= 1 && meseInizio <= 12) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int giornoInizio = -1;
+    while (true) {
+        System.out.println("Inserisci il giorno di nascita in formato numerico: ");
+        try {
+            giornoInizio = scanner.nextInt();
+            if (giornoInizio >= 1 && giornoInizio <= 31) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    LocalDate dateInizio = LocalDate.of(annoInzio, meseInizio, giornoInizio);
+    System.out.println("Data Inizio: "+dateInizio+" inserita con successo!");
+    int annoFine = -1;
+    while (true) {
+        System.out.println("Inserisci l'anno: ");
+        try {
+            annoFine = scanner.nextInt();
+            if (annoFine >= LocalDate.now().getYear() - 90 && annoFine <= LocalDate.now().getYear()){
+                break;
+            }else{
+                System.out.println("Errore: l'anno deve essere compreso tra " + (LocalDate.now().getYear() - 90) + " e " + (LocalDate.now().getYear()));
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int meseFine = -1;
+    while (true) {
+        System.out.println("Inserisci il mese in formato numerico (da 1 a 12): ");
+        try {
+            meseFine = scanner.nextInt();
+            if (meseFine >= 1 && meseFine <= 12) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 12");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    int giornoFine = -1;
+    while (true) {
+        System.out.println("Inserisci il giorno di nascita in formato numerico: ");
+        try {
+            giornoFine = scanner.nextInt();
+            if (giornoFine >= 1 && giornoFine <= 31) {
+                break;
+            } else {
+                System.out.println("Errore: il numero inserito deve essere compreso tra 1 e 31");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Inserisci un numero valido!");
+            scanner.nextLine();
+        }
+    }
+    LocalDate dateFine = LocalDate.of(annoFine, meseInizio, giornoFine);
+    System.out.println("Data Fine: "+dateFine+" inserita con successo!");
+    Long conteggioAbbonamenti=puntodiEmissioneDAO.countAbbonamentiEmessiInPeriodo(puntoEmissioneID,dateInizio,dateFine);
+    Long conteggioBiglietti=puntodiEmissioneDAO.countAbbonamentiEmessiInPeriodo(puntoEmissioneID,dateInizio,dateFine);
+    Long Totale=conteggioBiglietti+conteggioBiglietti;
+    System.out.println("Gli ABBONAMENTI e BIGLIETTI TOTALI presenti in quel periodo sono: "+Totale+"!");
+}
+
+
 
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
@@ -691,7 +1078,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
         }
-    }
+}
 
 
 

@@ -57,35 +57,4 @@ public class PuntodiEmissioneDAO {
                 .setParameter("dataFine", dataFine)
                 .getSingleResult();
     }
-    public Map<PuntodiEmissione, Long> countTotaleBigliettiEmessiInPeriodoPerTutti(LocalDate dataInizio, LocalDate dataFine) {
-        String selezione = "SELECT p, COUNT(b) FROM PuntodiEmissione p JOIN p.bigliettiEmessi b WHERE b.dataEmissione BETWEEN :dataInizio AND :dataFine GROUP BY p";
-        List<Object[]> results = em.createQuery(selezione, Object[].class)
-                .setParameter("dataInizio", dataInizio)
-                .setParameter("dataFine", dataFine)
-                .getResultList();
-
-        Map<PuntodiEmissione, Long> bigliettiPerPunto = new HashMap<>();
-        for (Object[] result : results) {
-            PuntodiEmissione punto = (PuntodiEmissione) result[0];
-            Long count = (Long) result[1];
-            bigliettiPerPunto.put(punto, count);
-        }
-        return bigliettiPerPunto;
-    }
-
-    public Map<PuntodiEmissione, Long> countTotaleAbbonamentiEmessiInPeriodoPerTutti(LocalDate dataInizio, LocalDate dataFine) {
-        String selezione = "SELECT p, COUNT(a) FROM PuntodiEmissione p JOIN p.abbonamentiEmessi a WHERE a.dataInizio BETWEEN :dataInizio AND :dataFine GROUP BY p";
-        List<Object[]> results = em.createQuery(selezione, Object[].class)
-                .setParameter("dataInizio", dataInizio)
-                .setParameter("dataFine", dataFine)
-                .getResultList();
-
-        Map<PuntodiEmissione, Long> abbonamentiPerPunto = new HashMap<>();
-        for (Object[] result : results) {
-            PuntodiEmissione punto = (PuntodiEmissione) result[0];
-            Long count = (Long) result[1];
-            abbonamentiPerPunto.put(punto, count);
-        }
-        return abbonamentiPerPunto;
-    }
 }
