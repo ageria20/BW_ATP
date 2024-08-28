@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -58,7 +59,13 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     inputCreazione(scanner, utenteDAO, tesseraDAO,peD,bigliettoDAO,abbonamentoDAO,mezzoDAO,bigliettoVidimatoDAO);
                 break;
                case 2:
-                   creazioneTratta(scanner, trattaDAO);
+
+                   
+                   long getIdMezzo = scanner.nextLong();
+                   Mezzo mezzoFromDB = mezzoDAO.findByID(getIdMezzo);
+                   getStatusMezzo(scanner, mezzoFromDB, mezzoDAO);
+                   creazioneMezzo(scanner, trattaDAO, mezzoDAO);
+                   creazioneStatoMezzo(scanner, mezzoFromDB);
                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -815,7 +822,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // Stampa l'oggetto creato
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
-    public static void creazioneMezzo(Scanner scanner,TrattaDAO trattaDAO){
+    public static void creazioneMezzo(Scanner scanner,TrattaDAO trattaDAO, MezzoDAO mezzoDAO){
         String targa;
         TipoMezzo tipoMezzo;
         int capienza = 0;
@@ -862,11 +869,12 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
        trattaAssegnata=creazioneTratta(scanner, trattaDAO);
         Mezzo mezzo = new Mezzo(tipoMezzo, targa, capienza, trattaAssegnata);
+        mezzoDAO.save(mezzo);
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
         }
 
-    public void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
+    public static void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
 
         System.out.println("Inserisci l'id del mezzo di cui vuoi informazioni");
         while(true) {
