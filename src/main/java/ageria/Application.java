@@ -11,13 +11,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+import java.lang.reflect.Member;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Application {
@@ -35,6 +39,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         UtenteDAO utenteDAO = new UtenteDAO(em);
         BigliettoVidimatoDAO bigliettoVidimatoDAO = new BigliettoVidimatoDAO(em);
+        PercorsoEffettuatoDAO percorsoEffettuatoDAO = new PercorsoEffettuatoDAO(em);
 
 
         //qui cominciamo con lo scanner
@@ -56,11 +61,14 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
             switch (scelta) {
                 case 1:
-                    inputCreazione(scanner, utenteDAO, tesseraDAO,peD,bigliettoDAO,abbonamentoDAO,mezzoDAO,bigliettoVidimatoDAO);
-                break;
-               case 2:
-                   creazioneTratta(scanner, trattaDAO);
-                   break;
+                    inputCreazione(scanner, utenteDAO, tesseraDAO, peD, bigliettoDAO, abbonamentoDAO, mezzoDAO, bigliettoVidimatoDAO);
+                    break;
+
+                case 2:
+                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO);
+
+
+                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -753,6 +761,9 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
+        // Inizializza la lista vuota per i mezzi assegnati (se necessario)
+        // In questo esempio, la lista è vuota poiché non richiediamo dettagli sui mezzi
+        // Puoi implementare una logica più complessa per popolare questa lista se lo desideri.
 
         // Creazione dell'oggetto Tratta
         Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
@@ -865,6 +876,111 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         Mezzo mezzo = new Mezzo(tipoMezzo, targa, capienza, trattaAssegnata);
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
+    }
+
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
+        while (true) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("premi 1 per CREARE una nuova TRATTA");
+            System.out.println("premi 2 per SCEGLIERE una TRATTA");
+            System.out.println("Scegli un'opzione: ");
+            int sceltaAdmin = -1;
+            try {
+                sceltaAdmin = scanner.nextInt();
+                scanner.nextLine();
+                if (sceltaAdmin == -1) break;
+            } catch (InputMismatchException e) {
+                System.out.println("inserisci un numero valido!");
+                scanner.nextLine();
+                continue;
+            }
+            switch (sceltaAdmin) {
+                case 1:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("creazione nuova tratta in corso...");
+                    creazioneTratta(scanner, trattaDAO);
+                    break;
+
+                case 2:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("scelta della tratta in corso...");
+                    selezioneTrattaEModificaTE(scanner, trattaDAO, percorsoEffettuatoDAO);
+                    break;
+
+            }
+        }
+    }
+
+    public static void selezioneTrattaEModificaTE(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
+        String partenzaInput = null;
+        String arrivoInput = null;
+
+        while (true) {
+            System.out.println("Seleziona la tratta da percorrere : ");
+            try {
+                long trattaId = scanner.nextLong();
+                System.out.println("inserisci l'ID del percorso effettuato: ");
+                long percorsoEffettuatoId = scanner.nextLong();
+                scanner.nextLine(); // Consuma la nuova linea dopo il numero
+
+                if (trattaId < 1) break; // Esce dal loop se l'ID della tratta è minore di 1
+
+                // Trova la tratta per ID
+                Tratta tratta = trattaDAO.findByID(trattaId);
+                PercorsoEffettuato percorsoEffettuato = percorsoEffettuatoDAO.findByID(percorsoEffettuatoId);
+
+                System.out.println("La tratta selezionata è: " + tratta);
+
+                // Formatter per il parsing della data
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                LocalDateTime partenzaEffettiva = null;
+                LocalDateTime arrivoEffettivo = null;
+
+                // Chiede l'orario di partenza effettivo
+                while (partenzaEffettiva == null) {
+                    try {
+                        System.out.println("Inserisci orario di partenza effettivo (formato: yyyy-MM-dd HH:mm): ");
+                        partenzaInput = scanner.nextLine();
+                        partenzaEffettiva = LocalDateTime.parse(partenzaInput, formatter);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Errore: formato del tempo previsto non valido. Usa il formato yyyy-MM-dd HH:mm.");
+                    }
+                }
+
+                // Chiede l'orario di arrivo effettivo
+                while (arrivoEffettivo == null) {
+                    try {
+                        System.out.println("Inserisci orario di arrivo effettivo (formato: yyyy-MM-dd HH:mm): ");
+                        arrivoInput = scanner.nextLine();
+                        arrivoEffettivo = LocalDateTime.parse(arrivoInput, formatter);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Errore: formato del tempo previsto non valido. Usa il formato yyyy-MM-dd HH:mm.");
+                    }
+                }
+
+                // Calcola la differenza tra orario di partenza e arrivo
+                Duration durataEffettiva = Duration.between(partenzaEffettiva, arrivoEffettivo);
+
+                // Mostra la differenza in ore e minuti
+                System.out.println("Differenza: " + durataEffettiva.toHours() + " ore, " +
+                        durataEffettiva.toMinutesPart() + " minuti");
+
+                // Qui puoi salvare la differenza nel database o effettuare altre operazioni con la tratta
+                percorsoEffettuato.setTempoEffettivo(durataEffettiva.toMinutes()); // Ad esempio in minuti
+                percorsoEffettuatoDAO.save(percorsoEffettuato);
+
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero valido!");
+                scanner.nextLine(); // Consuma la nuova linea errata
+            } catch (NullPointerException e) {
+                System.out.println("Errore: tratta non trovata!");
+            }
+        }
+    }
+
+
+}
         }
 
     public void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){

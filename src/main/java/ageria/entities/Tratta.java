@@ -33,6 +33,7 @@ public class Tratta {
         this.zonaDiPartenza = zonaDiPartenza;
         this.capolinea = capolinea;
         this.tempoPrevisto = tempoPrevisto;
+
     }
 
     public long getId() {

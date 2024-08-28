@@ -3,7 +3,6 @@ package ageria.entities;
 
 import jakarta.persistence.*;
 
-import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 
 @Entity
@@ -28,14 +27,18 @@ public class PercorsoEffettuato {
     @Column(name = "data_fine")
     private LocalDate dataFine;
 
+    @Column(name = "tempo_effettivo")
+    private Long tempoEffettivo;
+
     public PercorsoEffettuato() {
     }
 
-    public PercorsoEffettuato( Mezzo mezzo, Tratta tratta, LocalDate dataInizio, LocalDate dataFine) {
+    public PercorsoEffettuato(Mezzo mezzo, Tratta tratta, LocalDate dataInizio, LocalDate dataFine, Long tempoEffettivo) {
         this.mezzo = mezzo;
         this.tratta = tratta;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
+        this.tempoEffettivo = tempoEffettivo;
     }
 
     public long getId() {
@@ -78,6 +81,14 @@ public class PercorsoEffettuato {
         this.dataFine = dataFine;
     }
 
+    public Long getTempoEffettivo() {
+        return tempoEffettivo;
+    }
+
+    public void setTempoEffettivo(Long tempoEffettivo) {
+        this.tempoEffettivo = tempoEffettivo;
+    }
+
     @Override
     public String toString() {
         return "PercorsoEffettuato{" +
@@ -86,6 +97,7 @@ public class PercorsoEffettuato {
                 ", tratta=" + tratta +
                 ", dataInizio=" + dataInizio +
                 ", dataFine=" + dataFine +
+                ", tempoEffettivo=" + tempoEffettivo +
                 '}';
     }
 }
