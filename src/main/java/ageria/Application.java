@@ -60,7 +60,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 break;
                case 2:
 
-                   
+
                    long getIdMezzo = scanner.nextLong();
                    Mezzo mezzoFromDB = mezzoDAO.findByID(getIdMezzo);
                    getStatusMezzo(scanner, mezzoFromDB, mezzoDAO);
@@ -763,6 +763,10 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // Creazione dell'oggetto Tratta
         Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
         trattaDAO.save(tratta);
+
+
+
+
 
         // Stampa l'oggetto creato
         System.out.println("Oggetto Tratta creato: " + tratta);
