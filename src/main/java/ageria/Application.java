@@ -83,6 +83,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
             System.out.println("Premi 5 per RINNOVARE la TESSERA scaduta");
             System.out.println("Premi 6 per VIDIMARE il biglietto");
+            System.out.println("Premi 7 per VERIFICARE la validità della TESSERA");
             System.out.println("Premi 0 per USCIRE");
             System.out.print("Scegli un'opzione: ");
             int sceltaUtente = -1;
@@ -123,6 +124,10 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
                     vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
+                case 7:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità tessera");
+                    verificaValiditàTessera(scanner,tesseraDAO);
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -501,6 +506,34 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 System.out.println("Inserire un numero valido");
                 scanner.next();
             }
+        }
+    }
+    public static void verificaValiditàTessera(Scanner scanner,TesseraDAO tesseraDAO){
+        long numeroTessera = -1;
+        while (numeroTessera == -1) {
+            System.out.println("Inserire il numero di tessera da verificare: ");
+            if (scanner.hasNextLong()) {
+                try {
+                    numeroTessera = scanner.nextLong();
+                    Tessera tessera = tesseraDAO.findByID(numeroTessera);
+                    if(tessera.getDataScadenza().isAfter(LocalDate.now())){
+                        System.out.println("La tessera inserita è scaduta!");
+                        System.out.println("Rinnovo automatico in corso...");
+                        tessera.rinnovoAutomatico();
+                        System.out.println("Tessera con ID: "+tessera.getNumeroTessera()+" è stata rinnovata con successo!");
+                        System.out.println("Nuova data di scadenza: "+tessera.getDataScadenza());
+                    }else {
+                        System.out.println("la tessera è ancora valida ed scade il: "+tessera.getDataScadenza());
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Inserisci un valore valido");
+                    scanner.next();
+                }
+            }else{
+                    System.out.println("Inserire un numero valido");
+                    scanner.next();
+                }
+
         }
     }
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
