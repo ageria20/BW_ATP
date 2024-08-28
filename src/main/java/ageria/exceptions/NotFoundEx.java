@@ -10,7 +10,7 @@ public class NotFoundEx extends RuntimeException {
     }
 
     public NotFoundEx() {
-        super("hey!");
+        super("Non ci sono elementi presenti in questa lista, riprova con un altro numero ID");
     }
 
 }

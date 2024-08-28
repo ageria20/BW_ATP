@@ -4,6 +4,7 @@ import ageria.enums.StatoVidimazione;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class BigliettoVidimato {
     private Mezzo mezzo;
 
     @Column(name = "data_vidimazione")
-    private LocalDate dataVidimazione;
+    private LocalDateTime dataVidimazione;
 
     @Column(name = "stato_vidimazione")
     @Enumerated(EnumType.STRING)
@@ -32,11 +33,11 @@ public class BigliettoVidimato {
     public BigliettoVidimato() {
     }
 
-    public BigliettoVidimato(Mezzo mezzo, LocalDate dataVidimazione, StatoVidimazione statoVidimazione) {
+    public BigliettoVidimato(Biglietto biglietto,Mezzo mezzo, LocalDateTime dataVidimazione) {
         this.mezzo = mezzo;
-        this.dataVidimazione = dataVidimazione;
-        this.statoVidimazione = statoVidimazione;
+        this.dataVidimazione = LocalDateTime.now();
     }
+
 
     public long getId() {
         return id;
@@ -54,11 +55,11 @@ public class BigliettoVidimato {
         this.mezzo = mezzo;
     }
 
-    public LocalDate getDataVidimazione() {
+    public LocalDateTime getDataVidimazione() {
         return dataVidimazione;
     }
 
-    public void setDataVidimazione(LocalDate dataVidimazione) {
+    public void setDataVidimazione(LocalDateTime dataVidimazione) {
         this.dataVidimazione = dataVidimazione;
     }
 
