@@ -575,9 +575,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        // Inizializza la lista vuota per i mezzi assegnati (se necessario)
-        // In questo esempio, la lista è vuota poiché non richiediamo dettagli sui mezzi
-        // Puoi implementare una logica più complessa per popolare questa lista se lo desideri.
+
 
         // Creazione dell'oggetto Tratta
         Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
