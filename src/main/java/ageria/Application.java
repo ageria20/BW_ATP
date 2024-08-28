@@ -41,7 +41,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
 
         //qui cominciamo con lo scanner
-
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 se sei un utente");
@@ -63,7 +62,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     break;
 
                 case 2:
-                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
+                    opzioneAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -1001,7 +1000,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
+    public static void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
 
         System.out.println("Inserisci l'id del mezzo di cui vuoi informazioni");
         while(true) {
@@ -1031,6 +1030,22 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         // si potrebbe creare un altro attributo in Stato Mezzo con l'enum Manutenzione
 
+    }
+    public static void opzioneAdmin(Scanner scanner,TrattaDAO trattaDAO,PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO peD,MezzoDAO mezzoDAO){
+        while (true){
+                System.out.println("------------------------------------------------------");
+                System.out.println("Inserisci la password per avviare il MENU da ADMIN");
+                String password="admin";
+                String insertPassword=scanner.nextLine();
+               if (insertPassword.equals(password)){
+                   inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
+               }else if(insertPassword.equals("sono gay")){
+                  break;
+               }else {
+                   System.out.println("Password non valida,riprova o scrivi 'sono gay' per tornare al menu principale");
+               }
+
+        }
     }
 }
 
