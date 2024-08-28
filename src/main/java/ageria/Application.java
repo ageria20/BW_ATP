@@ -13,6 +13,7 @@ import jakarta.persistence.Persistence;
 import java.lang.reflect.Member;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -140,7 +141,7 @@ public class Application {
         System.out.println(tessera);
     }
 
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO) {
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
@@ -187,7 +188,7 @@ public class Application {
                 case 6:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
-                    vidimazzioneBiglietto();
+                    vidimazioneBiglietto(mezzoDAO, bigliettoVidimatoDAO, scanner, bigliettoDAO);
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -343,7 +344,7 @@ public class Application {
 
     }
 
-    public static void vidimazzioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimato bigliettoVidimato, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner,BigliettoDAO bigliettoDAO,Biglietto biglietto) {
+    public static void vidimazioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimato bigliettoVidimato, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner,BigliettoDAO bigliettoDAO,Biglietto biglietto) {
         while (true) {
             try {
                 System.out.println("Hai scelto di vidimare un biglietto, inserisci l'ID del biglietto per verificare che questa non sia già stata utilizzata");
@@ -580,7 +581,7 @@ public class Application {
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
 
-    public static void creazioneMezzo(Scanner scanner){
+    public static void creazioneMezzo(Scanner scanner, TrattaDAO trattaDAO){
         String targa;
         TipoMezzo tipoMezzo;
         int capienza = 0;
@@ -633,12 +634,12 @@ public class Application {
     }
 
 
-            }
-
-            }
 
 
 
 
-}
+
+
+
+
 
