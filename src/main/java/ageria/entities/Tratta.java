@@ -7,34 +7,32 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name ="tratta")
+@Table(name = "tratta")
 public class Tratta {
 
     @Id
     @GeneratedValue
     private long id;
 
-    @Column (name = "zona_di_partenza")
+    @Column(name = "zona_di_partenza")
     private String zonaDiPartenza;
 
     @Column
     private String capolinea;
 
-    @Column (name = "tempo_previsto")
+    @Column(name = "tempo_previsto")
     private Timestamp tempoPrevisto;
 
     @OneToMany(mappedBy = "trattaAssegnata")
     private List<Mezzo> mezziAssegnati;
 
+    @Column(name = "tempo_effettivo")
+    private Long tempoEffettivo;
+
     public Tratta() {
     }
 
-    public Tratta(String zonaDiPartenza, String capolinea, Timestamp tempoPrevisto, List<Mezzo> mezziAssegnati) {
-        this.zonaDiPartenza = zonaDiPartenza;
-        this.capolinea = capolinea;
-        this.tempoPrevisto = tempoPrevisto;
-        this.mezziAssegnati = mezziAssegnati;
-    }
+
     public Tratta(String zonaDiPartenza, String capolinea, Timestamp tempoPrevisto) {
         this.zonaDiPartenza = zonaDiPartenza;
         this.capolinea = capolinea;
@@ -82,6 +80,14 @@ public class Tratta {
         this.mezziAssegnati = mezziAssegnati;
     }
 
+    public Long getTempoEffettivo() {
+        return tempoEffettivo;
+    }
+
+    public void setTempoEffettivo(Long tempoEffettivo) {
+        this.tempoEffettivo = tempoEffettivo;
+    }
+
     @Override
     public String toString() {
         return "Tratta{" +
@@ -90,6 +96,7 @@ public class Tratta {
                 ", capolinea='" + capolinea + '\'' +
                 ", tempoPrevisto=" + tempoPrevisto +
                 ", mezziAssegnati=" + mezziAssegnati +
+                ", tempoEffettivo=" + tempoEffettivo +
                 '}';
     }
 }
