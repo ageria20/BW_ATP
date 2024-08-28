@@ -724,9 +724,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     Long Totale=conteggioBiglietti+conteggioAbbonamenti;
     System.out.println("Gli ABBONAMENTI e BIGLIETTI TOTALI presenti in quel periodo sono: "+Totale+"!");
 }
-
-
-
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
@@ -877,7 +874,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
     }
-
     public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
@@ -910,7 +906,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-
     public static void selezioneTrattaEModificaTE(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
         String partenzaInput = null;
         String arrivoInput = null;
@@ -978,11 +973,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-
-
-}
-        }
-
     public void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
 
         System.out.println("Inserisci l'id del mezzo di cui vuoi informazioni");
@@ -1015,8 +1005,13 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-
 }
+
+
+
+
+
+
 
 
 
