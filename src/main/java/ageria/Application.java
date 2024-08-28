@@ -113,18 +113,22 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità abbonamento");
                     verificaValiditàAbbonamento(scanner,abbonamentoDAO);
+                    break;
                 case 5:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto rinnovare l'abbonamento");
                     rinnovoTessera(scanner,tesseraDAO);
+                    break;
                 case 6:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
                     vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
+                    break;
                 case 7:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità tessera");
                     verificaValiditàTessera(scanner,tesseraDAO);
+                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
