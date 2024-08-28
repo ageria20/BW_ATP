@@ -752,9 +752,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        // Inizializza la lista vuota per i mezzi assegnati (se necessario)
-        // In questo esempio, la lista è vuota poiché non richiediamo dettagli sui mezzi
-        // Puoi implementare una logica più complessa per popolare questa lista se lo desideri.
 
         // Creazione dell'oggetto Tratta
         Tratta tratta = new Tratta(zonaDiPartenza, capolinea, tempoPrevisto);
@@ -868,7 +865,42 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
         }
+
+    public void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
+
+        System.out.println("Inserisci l'id del mezzo di cui vuoi informazioni");
+        while(true) {
+            try {
+                long mezzoId = scanner.nextLong();
+                scanner.nextLine();
+                // dovrebbe essere una lista con tutte le info della Tabella SatusMezzo
+                List<StatoMezzo> statusList = new ArrayList<>(mezzoDAO.statiManutenzioneMezzo(mezzoId));
+                if(statusList.isEmpty()){
+                    System.out.println("Il mezzo inserito non presenta alcun periodo di manutenzione");
+                }else {
+                    for (StatoMezzo statoMezzo : statusList) {
+
+                        if (statoMezzo.getDataFine() == null) {
+                            mezzo.setStatoManutenzione(true);
+                            System.out.println("Il Mezzo con targa: " + mezzo.getTarga() + " risulta il manutenzione dal " + statoMezzo.getDataInizio());
+                        } else {
+                            mezzo.setStatoManutenzione(false);
+                            System.out.println("Il mezzo con targa: " + mezzo.getTarga() + "  risulta in circolazione dal " + statoMezzo.getDataFine());
+                        }
+                    }
+                }
+            } catch (InputMismatchException ex){
+                System.out.println("Inserisci un valore valido");
+            }
+        }
+
+        // si potrebbe creare un altro attributo in Stato Mezzo con l'enum Manutenzione
+
+    }
+
+
 }
+
 
 
 

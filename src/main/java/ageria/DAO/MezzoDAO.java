@@ -2,9 +2,13 @@ package ageria.DAO;
 
 import ageria.entities.Abbonamento;
 import ageria.entities.Mezzo;
+import ageria.entities.StatoMezzo;
 import ageria.exceptions.NotFoundEx;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+
+import java.util.List;
 
 public class MezzoDAO {
     private final EntityManager em;
@@ -33,4 +37,12 @@ public class MezzoDAO {
         transaction.commit();
         System.out.println("l'abbonamento con ID: "+ id +" è stato rimosso correttamente");
     }
+
+    public List<StatoMezzo> statiManutenzioneMezzo(long mezzoId){
+        TypedQuery<StatoMezzo> query = em.createQuery("SELECT s FROM StatoMezzo s WHERE s.mezzo.id = :mezzoId", StatoMezzo.class);
+        query.setParameter("mezzoId", mezzoId);
+        return query.getResultList();
+    }
+
+
 }

@@ -4,10 +4,11 @@ import ageria.entities.BigliettoVidimato;
 import ageria.exceptions.NotFoundEx;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 
 public class BigliettoVidimatoDAO {
 
-    private final EntityManager em;
+    private EntityManager em;
 
     public BigliettoVidimatoDAO(EntityManager em) {
         this.em = em;
@@ -35,6 +36,11 @@ public class BigliettoVidimatoDAO {
         em.remove(found);
         transaction.commit();
         System.out.println("il biglietto con ID: " + id + " è stato rimosso correttamente");
+    }
+
+    public long bigliettiVidimatiCount(){
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(b) FROM BigliettoVidimato b WHERE b.biglietto_vidimato = true", Long.class);
+        return query.getSingleResult();
     }
 
 }
