@@ -543,7 +543,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-    
+
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
@@ -706,7 +706,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     System.out.println("Il mezzo inserito non presenta alcun periodo di manutenzione");
                 }else {
                     for (StatoMezzo statoMezzo : statusList) {
-                        System.out.println(statoMezzo);
+
                         if (statoMezzo.getDataFine() == null) {
                             mezzo.setStatoManutenzione(true);
                             System.out.println("Il Mezzo con targa: " + mezzo.getTarga() + " risulta il manutenzione dal " + statoMezzo.getDataInizio());
