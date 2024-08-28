@@ -24,8 +24,6 @@ import java.util.Scanner;
 
 public class Application {
 private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("bw_atp");
-    private static EntityManager em = emf.createEntityManager();
-    private static TrattaDAO trattaDAO = new TrattaDAO(em);
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -39,6 +37,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         UtenteDAO utenteDAO = new UtenteDAO(em);
         BigliettoVidimatoDAO bigliettoVidimatoDAO = new BigliettoVidimatoDAO(em);
+
 
         //qui cominciamo con lo scanner
 
@@ -75,7 +74,63 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             emf.close();
         }
     }
-
+    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
+        while (true) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
+            System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
+            System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
+            System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
+            System.out.println("Premi 5 per RINNOVARE la TESSERA scaduta");
+            System.out.println("Premi 6 per VIDIMARE il biglietto");
+            System.out.println("Premi 0 per USCIRE");
+            System.out.print("Scegli un'opzione: ");
+            int sceltaUtente = -1;
+            try {
+                sceltaUtente = scanner.nextInt();
+                scanner.nextLine();
+                if (sceltaUtente == -1) break;
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido!");
+                scanner.nextLine();
+                continue;
+            }
+            switch (sceltaUtente) {
+                case 1:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
+                    creazioneUtenteTessera(scanner, utenteDAO, tesseraDAO);
+                    break;
+                case 2:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto l'acquisto di uno o più biglietti");
+                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO,bigliettoDAO);
+                    break;
+                case 3:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto l'acquisto di un abbonamento");
+                    acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
+                    break;
+                case 4:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità abbonamento");
+                    verificaValiditàAbbonamento(scanner,abbonamentoDAO);
+                case 5:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto rinnovare l'abbonamento");
+                    rinnovoAbbonamento(scanner,tesseraDAO);
+                case 6:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto di vidimare il biglietto");
+                    vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
+                case 0:
+                    System.out.println("Chiusura in corso...");
+                    return;
+                default:
+                    System.out.println("Opzione non valida. Riprova.");
+            }
+        }
+    }
     public static void creazioneUtenteTessera(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO) {
         System.out.println("------------------------------------------------------");
         String nome = "uno";
@@ -147,65 +202,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println(utente);
         System.out.println(tessera);
     }
-
-    public static void inputCreazione(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO,AbbonamentoDAO abbonamentoDAO,MezzoDAO mezzoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
-        while (true) {
-            System.out.println("------------------------------------------------------");
-            System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
-            System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
-            System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
-            System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
-            System.out.println("Premi 5 per RINNOVARE la TESSERA scaduta");
-            System.out.println("Premi 6 per VIDIMARE il biglietto");
-            System.out.println("Premi 0 per USCIRE");
-            System.out.print("Scegli un'opzione: ");
-            int sceltaUtente = -1;
-            try {
-                sceltaUtente = scanner.nextInt();
-                scanner.nextLine();
-                if (sceltaUtente == -1) break;
-            } catch (InputMismatchException e) {
-                System.out.println("Inserisci un numero valido!");
-                scanner.nextLine();
-                continue;
-            }
-            switch (sceltaUtente) {
-                case 1:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
-                    creazioneUtenteTessera(scanner, utenteDAO, tesseraDAO);
-                    break;
-                case 2:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO,bigliettoDAO);
-                    break;
-                case 3:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Hai scelto l'acquisto di un abbonamento");
-                    acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
-                    break;
-                case 4:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Hai scelto verifica validità abbonamento");
-                    verificaValiditàAbbonamento(scanner,abbonamentoDAO);
-                case 5:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Hai scelto rinnovare l'abbonamento");
-                    rinnovoAbbonamento(scanner,tesseraDAO);
-                case 6:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Hai scelto di vidimare il biglietto");
-                    vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
-                case 0:
-                    System.out.println("Chiusura in corso...");
-                    return;
-                default:
-                    System.out.println("Opzione non valida. Riprova.");
-            }
-        }
-    }
-
     public static void acquistoAbbonamento(Scanner scanner, TesseraDAO tesseraDAO,PuntodiEmissioneDAO puntodiEmissioneDAO,AbbonamentoDAO abbonamentoDAO) {
         boolean datavalida;
         LocalDate dataInizio;
@@ -351,7 +347,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
 
     }
-
     public static void vidimazioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner, BigliettoDAO bigliettoDAO) {
         while (true) {
             try {
@@ -458,7 +453,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("Non è stato selezionato un punto di emissione valido.");
         }
     }
-
     public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
         long numeroTessera = -1;
         while (numeroTessera == -1) {
@@ -509,7 +503,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
@@ -557,7 +550,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         return tratta;
 
     }
-
     public static void creazioneStatoMezzo(Scanner scanner, Mezzo mezzo){
          // Presupponiamo che l'oggetto Mezzo esista già e sia stato inizializzato
         Manutenzione stato = null;
@@ -611,8 +603,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // Stampa l'oggetto creato
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
-
-    public static void creazioneMezzo(Scanner scanner){
+    public static void creazioneMezzo(Scanner scanner,TrattaDAO trattaDAO){
         String targa;
         TipoMezzo tipoMezzo;
         int capienza = 0;
