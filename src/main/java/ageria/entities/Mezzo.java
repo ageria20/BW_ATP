@@ -90,6 +90,14 @@ public class Mezzo {
         return id;
     }
 
+    public String getTarga() {
+        return targa;
+    }
+
+    public void setTarga(String targa) {
+        this.targa = targa;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -134,7 +142,7 @@ public class Mezzo {
         return statoMezzo;
     }
 
-    public void setStaotMezzo(List<StatoMezzo> statoMezzo) {
+    public void setStatoMezzo(List<StatoMezzo> statoMezzo) {
         this.statoMezzo = statoMezzo;
     }
 
