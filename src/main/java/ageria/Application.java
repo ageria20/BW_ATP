@@ -105,7 +105,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 2:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,puntodiEmissioneDAO,bigliettoDAO);
+                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO);
                     break;
                 case 3:
                     System.out.println("-------------------------------------------------");
@@ -391,7 +391,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO,BigliettoDAO bigliettoDAO) {
+    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO,BigliettoDAO bigliettoDAO) {
         int numeroBiglietti = 0;
         boolean inputValido = false;
 
@@ -536,6 +536,11 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         }
     }
+
+    public static void monitoraggioNBigliettiAbbonamentiTotale (Scanner scanner) {
+
+    }
+
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
