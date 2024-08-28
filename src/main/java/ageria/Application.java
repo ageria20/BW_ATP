@@ -36,6 +36,7 @@ public class Application {
         MezzoDAO mezzoDAO = new MezzoDAO(em);
         UtenteDAO utenteDAO = new UtenteDAO(em);
         BigliettoVidimatoDAO bigliettoVidimatoDAO = new BigliettoVidimatoDAO(em);
+        PercorsoEffettuatoDAO percorsoEffettuatoDAO = new PercorsoEffettuatoDAO(em);
 
 
         //qui cominciamo con lo scanner
@@ -61,7 +62,7 @@ public class Application {
                     break;
 
                 case 2:
-                    inputAdmin(scanner, trattaDAO);
+                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO);
 
 
                     break;
@@ -704,7 +705,7 @@ public class Application {
 
     }
 
-    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO) {
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("premi 1 per CREARE una nuova TRATTA");
@@ -730,14 +731,14 @@ public class Application {
                 case 2:
                     System.out.println("------------------------------------------------------");
                     System.out.println("scelta della tratta in corso...");
-                    selezioneTrattaEModificaTE(scanner, trattaDAO);
+                    selezioneTrattaEModificaTE(scanner, trattaDAO, percorsoEffettuatoDAO);
                     break;
 
             }
         }
     }
 
-    public static void selezioneTrattaEModificaTE(Scanner scanner, TrattaDAO trattaDAO) {
+    public static void selezioneTrattaEModificaTE(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
         String partenzaInput = null;
         String arrivoInput = null;
 
@@ -745,12 +746,16 @@ public class Application {
             System.out.println("Seleziona la tratta da percorrere : ");
             try {
                 long trattaId = scanner.nextLong();
+                System.out.println("inserisci l'ID del percorso effettuato: ");
+                long percorsoEffettuatoId = scanner.nextLong();
                 scanner.nextLine(); // Consuma la nuova linea dopo il numero
 
                 if (trattaId < 1) break; // Esce dal loop se l'ID della tratta è minore di 1
 
                 // Trova la tratta per ID
                 Tratta tratta = trattaDAO.findByID(trattaId);
+                PercorsoEffettuato percorsoEffettuato = percorsoEffettuatoDAO.findByID(percorsoEffettuatoId);
+                
                 System.out.println("La tratta selezionata è: " + tratta);
 
                 // Formatter per il parsing della data
@@ -789,8 +794,8 @@ public class Application {
                         durataEffettiva.toMinutesPart() + " minuti");
 
                 // Qui puoi salvare la differenza nel database o effettuare altre operazioni con la tratta
-                tratta.setTempoEffettivo(durataEffettiva.toMinutes()); // Ad esempio in minuti
-                trattaDAO.save(tratta);
+                percorsoEffettuato.setTempoEffettivo(durataEffettiva.toMinutes()); // Ad esempio in minuti
+                percorsoEffettuatoDAO.save(percorsoEffettuato);
 
             } catch (InputMismatchException e) {
                 System.out.println("Errore: inserisci un numero valido!");

@@ -26,8 +26,6 @@ public class Tratta {
     @OneToMany(mappedBy = "trattaAssegnata")
     private List<Mezzo> mezziAssegnati;
 
-    @Column(name = "tempo_effettivo")
-    private Long tempoEffettivo;
 
     public Tratta() {
     }
@@ -80,13 +78,6 @@ public class Tratta {
         this.mezziAssegnati = mezziAssegnati;
     }
 
-    public Long getTempoEffettivo() {
-        return tempoEffettivo;
-    }
-
-    public void setTempoEffettivo(Long tempoEffettivo) {
-        this.tempoEffettivo = tempoEffettivo;
-    }
 
     @Override
     public String toString() {
@@ -96,7 +87,6 @@ public class Tratta {
                 ", capolinea='" + capolinea + '\'' +
                 ", tempoPrevisto=" + tempoPrevisto +
                 ", mezziAssegnati=" + mezziAssegnati +
-                ", tempoEffettivo=" + tempoEffettivo +
                 '}';
     }
 }
