@@ -33,4 +33,5 @@ public class BigliettoDAO {
         transaction.commit();
         System.out.println("il biglietto con ID: "+id+"è stato rimosso correttamente");
     }
+
 }
