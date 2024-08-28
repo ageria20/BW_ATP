@@ -20,7 +20,7 @@ public class MezzoDAO {
         transaction.begin();
         em.persist(mezzo);
         transaction.commit();
-        System.out.println("l'abbonamento con ID: "+ mezzo.getId()+"è stato salvato");
+        System.out.println("il mezzo con ID: "+ mezzo.getId()+"è stato salvato");
     }
     public Mezzo findByID(long id) {
         Mezzo found = em.find(Mezzo.class, id);
@@ -35,7 +35,7 @@ public class MezzoDAO {
         transaction.begin();
         em.remove(found);
         transaction.commit();
-        System.out.println("l'abbonamento con ID: "+ id +" è stato rimosso correttamente");
+        System.out.println("il mezzo con ID: "+ id +" è stato rimosso correttamente");
     }
 
     public List<StatoMezzo> statiManutenzioneMezzo(long mezzoId){
@@ -43,6 +43,11 @@ public class MezzoDAO {
         query.setParameter("mezzoId", mezzoId);
         return query.getResultList();
     }
-
+    public long countBigliettiVidimatiPerMezzo(long mezzoId) {
+        TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(bv) FROM BigliettoVidimato bv WHERE bv.mezzo.id = :mezzoId", Long.class);
+        query.setParameter("mezzoId", mezzoId);
+        return query.getSingleResult();
+    }
 
 }

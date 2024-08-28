@@ -1009,7 +1009,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // si potrebbe creare un altro attributo in Stato Mezzo con l'enum Manutenzione
 
     }
-
 }
 
 
