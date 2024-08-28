@@ -41,8 +41,8 @@ public class AbbonamentoDAO {
     }
 
     public List<Abbonamento> findByNumeroTessera(long numeroTessera){
-        TypedQuery<Abbonamento> query=em.createQuery(
-                "SELECT a FROM Abbonamento a WHERE a.tessera.id=:numeroTessera",
+        String selezione="SELECT a FROM Abbonamento a WHERE a.tessera.id=:numeroTessera";
+        TypedQuery<Abbonamento> query=em.createQuery(selezione,
                 Abbonamento.class);
         query.setParameter("numeroTessera",numeroTessera);
         if (query.getResultList().isEmpty()) {
