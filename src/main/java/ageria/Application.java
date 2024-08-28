@@ -543,54 +543,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
     }
 
-    public static void creazioneElementoAdmin(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO, TrattaDAO trattaDAO){
-        while (true) {
-            System.out.println("------------------------------------------------------");
-            System.out.println("Premi 1 per CREARE un nuovo MEZZO ");
-            System.out.println("Premi 2 per CREARE una nuova TRATTA");
-            System.out.println("Premi 3 per INSERIRE uno STATO di MANUTENZIONE ");
-            System.out.println("Premi 4 per CONTROLLARE lo STATO di MANUTENZIONE di un mezzo");
-
-            System.out.println("Premi 0 per USCIRE");
-            System.out.print("Scegli un'opzione: ");
-            int sceltaUtente = -1;
-            try {
-                sceltaUtente = scanner.nextInt();
-                scanner.nextLine();
-                if (sceltaUtente == -1) break;
-            } catch (InputMismatchException e) {
-                System.out.println("Inserisci un numero valido!");
-                scanner.nextLine();
-                continue;
-            }
-            switch (sceltaUtente) {
-                case 1:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Creazione nuovo Mezzo e associazione Tratta in corso...");
-                    creazioneMezzo(scanner, trattaDAO);
-                    break;
-                case 2:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Creazione nuova Tratta");
-                    creazioneTratta(scanner, trattaDAO);
-                    break;
-                case 3:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Inserisci lo stato di manutenzione di un mezzo");
-                    creazioneStatoMezzo(scanner, mezzo);
-                    break;
-                case 4:
-                    System.out.println("-------------------------------------------------");
-                    System.out.println("Hai scelto di controllare lo stato di un mezzo");
-                    getStatusMezzo(scanner,mezzo, mezzoDAO);
-                case 0:
-                    System.out.println("Chiusura in corso...");
-                    return;
-                default:
-                    System.out.println("Opzione non valida. Riprova.");
-            }
-        }
-    }
+    
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
