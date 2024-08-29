@@ -72,7 +72,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 default:
                     System.out.println("Opzione non valida. Riprova.");
             }
-            System.out.println("TUTTO OK!");
             em.close();
             emf.close();
         }
