@@ -87,8 +87,8 @@ public class Abbonamento {
                 ", tipoDiAbbonamento=" + tipoDiAbbonamento +
                 ", dataInizio=" + dataInizio +
                 ", dataScadenza=" + dataScadenza +
-                ", puntoEmissione=" + puntoEmissione +
-                ", tessera=" + tessera +
+               // ", puntoEmissione=" + puntoEmissione +
+               ", tessera=" + tessera +
                 '}';
     }
 }

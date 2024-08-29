@@ -464,8 +464,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
     public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
-        long numeroTessera = -1;
-        while (numeroTessera == -1) {
+        long numeroTessera=-1;
+        while (numeroTessera==-1) {
             System.out.println("Inserire il numero di tessera associato all'abbonamento: ");
             if (scanner.hasNextLong()) {
                 try {
