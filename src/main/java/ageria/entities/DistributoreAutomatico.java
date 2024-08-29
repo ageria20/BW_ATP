@@ -23,7 +23,8 @@ private boolean inFunzione;
 
     @Override
     public String toString() {
-        return "DistributoreAutomatico{"+ super.toString() +
+        return "DistributoreAutomatico{"
+                + super.toString() +
                 "inFunzione=" + inFunzione +
                 "} " ;
     }
