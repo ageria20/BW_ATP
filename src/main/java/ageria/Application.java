@@ -1039,7 +1039,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 String insertPassword=scanner.nextLine();
                if (insertPassword.equals(password)){
                    inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
-               }else if(insertPassword.equals("sono gay")){
+               }else if(insertPassword.equals("sono scemo")){
                   break;
                }else {
                    System.out.println("Password non valida,riprova o scrivi 'sono gay' per tornare al menu principale");
