@@ -475,7 +475,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                         System.out.println("Nessun abbonamento trovato per la tessera inserita.");
                     } else {
                         for (Abbonamento abbonamento : abbonamentiPresenti) {
-                            System.out.println(abbonamento);
                             if (abbonamento.getDataScadenza().isAfter(LocalDate.now())) {
                                 System.out.println("L'abbonamento con ID: " + abbonamento.getId() + " è valido fino al: " + abbonamento.getDataScadenza());
                             } else {
