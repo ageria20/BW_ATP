@@ -18,7 +18,7 @@ public class TrattaDAO {
         transaction.begin();
         em.persist(tratta);
         transaction.commit();
-        System.out.println("la tratta con ID: " + tratta.getId() + "è stato salvato");
+        System.out.println("------------------------SALVATAGGIO RIUSCITO------------------------");
     }
 
     public Tratta findByID(long id) {

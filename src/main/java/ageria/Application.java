@@ -953,24 +953,25 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // Stampa l'oggetto creato
         System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
     }
-    public static void creazioneMezzo(Scanner scanner,MezzoDAO mezzoDAO){
+    public static void creazioneMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
 
         String targa;
-        TipoMezzo tipoMezzo;
+        TipoMezzo tipoMezzo = null;
         int capienza = 0;
-        Tratta trattaAssegnata;
 
-
+        // Verifica tipo di mezzo
         while (true) {
             try {
                 System.out.println("Inserisci il tipo di mezzo che vuoi creare: AUTOBUS, TRAM");
                 String sceltaMezzo = scanner.nextLine().toUpperCase();
                 tipoMezzo = TipoMezzo.valueOf(sceltaMezzo);
-                break;
+                break; // Esce dal ciclo se il tipo di mezzo è valido
             } catch (IllegalArgumentException ex) {
                 System.out.println("Errore: Inserisci un valore valido (AUTOBUS, TRAM).");
             }
         }
+
+        // Verifica targa
         while (true) {
             try {
                 System.out.println("Inserisci una targa identificativa per il mezzo: ");
@@ -986,24 +987,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        while(capienza <= 0){
-            try{
-                System.out.println("Inserisci la capienza del mezzo");
+        // Verifica capienza
+        while (capienza <= 0) {
+            try {
+                System.out.println("Inserisci la capienza del mezzo (tra 30 e 50 posti): ");
                 capienza = scanner.nextInt();
-                scanner.nextLine();
-                if(capienza > 29 & capienza <= 50){
-                    break;
+                scanner.nextLine(); // Pulisce il buffer dello scanner
+                if (capienza >= 30 && capienza <= 50) {
+                    break; // Esce dal ciclo se la capienza è valida
+                } else {
+                    System.out.println("Errore: La capienza deve essere compresa tra 30 e 50.");
                 }
-            } catch(InputMismatchException ex ){
-                System.out.println("Inserire un valore valido");
-                scanner.next();
+            } catch (InputMismatchException ex) {
+                System.out.println("Errore: Inserisci un numero valido.");
+                scanner.next(); // Consuma l'input non valido
             }
         }
 
+        // Creazione del mezzo
         Mezzo mezzo = new Mezzo(tipoMezzo, targa, capienza);
         mezzoDAO.save(mezzo);
         System.out.println("Mezzo creato correttamente: " + mezzo);
-
     }
     public static void avviaPercorso(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO, MezzoDAO mezzoDAO) {
 
@@ -1013,32 +1017,48 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         while (ciclo == 0) {
 
-            System.out.println("Inserisci l'ID del mezzo da utilizzare: ");
-            long id_mezzo = scanner.nextLong();
-            scanner.nextLine(); // Consumare il newline rimasto
-            Mezzo mezzo = mezzoDAO.findByID(id_mezzo);
+            Mezzo mezzo = null;
+            while (mezzo == null) {
+                try {
+                    System.out.println("Inserisci l'ID del mezzo da utilizzare: ");
+                    long id_mezzo = scanner.nextLong();
+                    scanner.nextLine();  // Consumare il newline rimasto
+                    mezzo = mezzoDAO.findByID(id_mezzo);
 
-            if (mezzo == null) {
-                System.out.println("Errore: Mezzo non trovato.");
-                continue; // Riparte dal ciclo
+                    if (mezzo == null) {
+                        System.out.println("Errore: Mezzo non trovato. Inserisci un ID valido.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Errore: devi inserire un numero valido per l'ID del mezzo.");
+                    scanner.nextLine(); // Consuma l'input non valido
+                } catch (NotFoundEx e) {
+                    System.out.println("Errore: " + e.getMessage());
+                }
             }
 
-            System.out.println("Inserisci l'ID della tratta da percorrere: ");
-            long id_tratta = scanner.nextLong();
-            scanner.nextLine(); // Consumare il newline rimasto
-            Tratta tratta = trattaDAO.findByID(id_tratta);
+            Tratta tratta = null;
+            while (tratta == null) {
+                try {
+                    System.out.println("Inserisci l'ID della tratta da percorrere: ");
+                    long id_tratta = scanner.nextLong();
+                    scanner.nextLine(); // Consumare il newline rimasto
+                    tratta = trattaDAO.findByID(id_tratta);
 
-            if (tratta == null) {
-                System.out.println("Errore: Tratta non trovata.");
-                continue; // Riparte dal ciclo
+                    if (tratta == null) {
+                        System.out.println("Errore: Tratta non trovata. Inserisci un ID valido.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Errore: devi inserire un numero valido per l'ID della tratta.");
+                    scanner.nextLine(); // Consuma l'input non valido
+                } catch (NotFoundEx e) {
+                    System.out.println("Errore: " + e.getMessage());
+                }
             }
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
             LocalDateTime partenzaEffettiva = null;
             LocalDateTime arrivoEffettivo = null;
 
-            // Chiede l'orario di partenza effettivo
             while (partenzaEffettiva == null) {
                 try {
                     System.out.println("Inserisci orario di partenza effettivo (formato: yyyy-MM-dd HH:mm): ");
@@ -1049,7 +1069,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 }
             }
 
-            // Chiede l'orario di arrivo effettivo
             while (arrivoEffettivo == null) {
                 try {
                     System.out.println("Inserisci orario di arrivo effettivo (formato: yyyy-MM-dd HH:mm): ");
@@ -1060,20 +1079,16 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 }
             }
 
-            // Calcola la differenza tra orario di partenza e arrivo
             Duration durataEffettiva = Duration.between(partenzaEffettiva, arrivoEffettivo);
 
-            // Mostra la differenza in ore e minuti
             System.out.println("Il percorso è durato: " + durataEffettiva.toHours() + " ore, " +
                     durataEffettiva.toMinutesPart() + " minuti");
 
-            // Salvataggio nel database
             PercorsoEffettuato percorsoEffettuato = new PercorsoEffettuato(mezzo, tratta, partenzaEffettiva, arrivoEffettivo, durataEffettiva.toMinutes());
             percorsoEffettuatoDAO.save(percorsoEffettuato);
 
             System.out.println("Il percorso effettuato con ID: " + percorsoEffettuato.getId() + " è stato salvato con successo!");
 
-            // Chiedere se inserire un altro percorso
             System.out.println("Vuoi inserire un altro percorso? (s/n)");
             String risposta = scanner.next();
             if (!risposta.equalsIgnoreCase("s")) {
@@ -1114,24 +1129,33 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     }
     public static void estraiMediaPercorsiTempiEffettivi(Scanner scanner, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
         long mezzo_id = -1;
-        try {
-            System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
-            mezzo_id = scanner.nextLong();
-            if (mezzo_id <= 0) {
-                System.out.println("Errore: l'ID del mezzo deve essere un numero positivo.");
-                return;
+
+        while (true) {
+            try {
+                System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
+                mezzo_id = scanner.nextLong();
+                scanner.nextLine(); // Consuma il newline rimasto
+
+                if (mezzo_id <= 0) {
+                    System.out.println("Errore: l'ID del mezzo deve essere un numero positivo.");
+                    continue; // Richiede nuovamente l'inserimento dell'ID
+                }
+
+                // Estrae la media dei tempi dei percorsi effettuati
+                Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
+                if (mediaTempiPercorsi == null) {
+                    System.out.println("Non sono stati trovati percorsi per il mezzo con ID " + mezzo_id);
+                } else {
+                    System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
+                }
+                break; // Esce dal ciclo se tutto è andato bene
+
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: è necessario inserire un numero intero valido per l'ID del mezzo.");
+                scanner.next(); // Consuma l'input non valido
+            } catch (Exception e) {
+                System.out.println("Si è verificato un errore imprevisto: " + e.getMessage());
             }
-            Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
-            if (mediaTempiPercorsi == null) {
-                System.out.println("Non sono stati trovati percorsi per il mezzo con ID " + mezzo_id);
-            } else {
-                System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Errore: è necessario inserire un numero intero valido per l'ID del mezzo.");
-            scanner.next();
-        } catch (Exception e) {
-            System.out.println("Si è verificato un errore imprevisto: " + e.getMessage());
         }
     }
 

@@ -18,7 +18,7 @@ public class UtenteDAO {
         transaction.begin();
         em.persist(utente);
         transaction.commit();
-        System.out.println("l'utente con ID: "+ utente.getId()+"è stato salvato");
+        System.out.println("------------------------SALVATAGGIO RIUSCITO------------------------");;
     }
     public Utente findByID(long id) {
         Utente found = em.find(Utente.class, id);

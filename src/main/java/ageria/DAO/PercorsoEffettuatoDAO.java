@@ -18,7 +18,7 @@ public class PercorsoEffettuatoDAO {
         transaction.begin();
         em.persist(PE);
         transaction.commit();
-        System.out.println("il percorso effettuato con ID: " + PE.getId() + "è stato salvato");
+        System.out.println("------------------------SALVATAGGIO RIUSCITO------------------------");
     }
 
     public PercorsoEffettuato findByID(long id) {
