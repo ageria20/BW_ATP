@@ -63,7 +63,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     break;
 
                 case 2:
-                    inputAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO);
+                    opzioneAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO);
+
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -74,6 +75,21 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("TUTTO OK!");
             em.close();
             emf.close();
+        }
+    }
+    public static void opzioneAdmin(Scanner scanner,TrattaDAO trattaDAO,PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO peD,MezzoDAO mezzoDAO){
+        while (true){
+            System.out.println("------------------------------------------------------");
+            System.out.println("Inserisci la password per avviare il MENU da ADMIN");
+            String password="admin";
+            String insertPassword=scanner.nextLine();
+            if (insertPassword.equals(password)){
+                inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
+            }else if(insertPassword.equals("sono scemo")){
+                break;
+            }else {
+                System.out.println("Password non valida,riprova o scrivi 'sono gay' per tornare al menu principale");
+            }
         }
     }
     public static void inputUtente(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO) {
@@ -134,6 +150,62 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     System.out.println("Hai scelto verifica validità tessera");
                     verificaValiditàTessera(scanner,tesseraDAO);
                     break;
+                case 0:
+                    System.out.println("Chiusura in corso...");
+                    return;
+                default:
+                    System.out.println("Opzione non valida. Riprova.");
+            }
+        }
+    }
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO) {
+        while (true) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("premi 1 per CREARE una nuovo MEZZO");
+            System.out.println("premi 2 per CREARE una TRATTA");
+            System.out.println("premi 3 per AVVIARE un nuovo PERCORSO");
+            System.out.println("premi 4 per MONITORARE biglietti ed abbonamenti");
+            System.out.println("premi 5 per la MEDIA dei tempi effettivi  di un mezzo");
+            System.out.println("Scegli un'opzione: ");
+            int sceltaAdmin = -1;
+            try {
+                sceltaAdmin = scanner.nextInt();
+                scanner.nextLine();
+                if (sceltaAdmin == -1) break;
+            } catch (InputMismatchException e) {
+                System.out.println("inserisci un numero valido!");
+                scanner.nextLine();
+                continue;
+            }
+            switch (sceltaAdmin) {
+                case 1:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Creazione del nuovo mezzo in corso...");
+                    creazioneMezzo(scanner, mezzoDAO);
+                    break;
+
+                case 2:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("scelta della tratta in corso...");
+                    creazioneTratta(scanner, trattaDAO);
+                    break;
+                case 3:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Avvio nuovo percorso in corso...");
+                    avviaPercorso(scanner,trattaDAO,percorsoEffettuatoDAO,mezzoDAO);
+                    break;
+                case 4:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
+                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO,mezzoDAO);
+                    break;
+                case 5:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Calcolo media percorsi in avvio...");
+                    estraiMediaPercorsiTempiEffettivi(scanner, percorsoEffettuatoDAO);
+                    break;
+
+
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
@@ -895,62 +967,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
     }
-    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO) {
-        while (true) {
-            System.out.println("------------------------------------------------------");
-            System.out.println("premi 1 per CREARE una nuovo MEZZO");
-            System.out.println("premi 2 per CREARE una TRATTA");
-            System.out.println("premi 3 per AVVIARE un nuovo PERCORSO");
-            System.out.println("premi 4 per MONITORARE biglietti ed abbonamenti");
-            System.out.println("premi 5 per la MEDIA dei tempi effettivi  di un mezzo");
-            System.out.println("Scegli un'opzione: ");
-            int sceltaAdmin = -1;
-            try {
-                sceltaAdmin = scanner.nextInt();
-                scanner.nextLine();
-                if (sceltaAdmin == -1) break;
-            } catch (InputMismatchException e) {
-                System.out.println("inserisci un numero valido!");
-                scanner.nextLine();
-                continue;
-            }
-            switch (sceltaAdmin) {
-                case 1:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Creazione del nuovo mezzo in corso...");
-                    creazioneMezzo(scanner, mezzoDAO);
-                    break;
-
-                case 2:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("scelta della tratta in corso...");
-                   creazioneTratta(scanner, trattaDAO);
-                    break;
-                case 3:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Avvio nuovo percorso in corso...");
-                    avviaPercorso(scanner,trattaDAO,percorsoEffettuatoDAO,mezzoDAO);
-                    break;
-                case 4:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
-                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO,mezzoDAO);
-                    break;
-                case 5:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Calcolo media percorsi in avvio...");
-                    estraiMediaPercorsiTempiEffettivi(scanner, percorsoEffettuatoDAO);
-                    break;
-
-
-                case 0:
-                    System.out.println("Chiusura in corso...");
-                    return;
-                default:
-                    System.out.println("Opzione non valida. Riprova.");
-            }
-        }
-    }
     public static void avviaPercorso(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO, MezzoDAO mezzoDAO) {
 
         String partenzaInput = null;
@@ -1058,19 +1074,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // si potrebbe creare un altro attributo in Stato Mezzo con l'enum Manutenzione
 
     }
-    public static void opzioneAdmin(Scanner scanner,TrattaDAO trattaDAO,PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO peD,MezzoDAO mezzoDAO){
-        while (true){
-                System.out.println("------------------------------------------------------");
-                System.out.println("Inserisci la password per avviare il MENU da ADMIN");
-                String password="admin";
-                String insertPassword=scanner.nextLine();
-               if (insertPassword.equals(password)){
-                   inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
-               }else if(insertPassword.equals("sono scemo")){
-                  break;
-               }else {
-                   System.out.println("Password non valida,riprova o scrivi 'sono gay' per tornare al menu principale");
-               }
     public static void estraiMediaPercorsiTempiEffettivi (Scanner scanner,PercorsoEffettuatoDAO percorsoEffettuatoDAO){
         long mezzo_id;
 
@@ -1078,9 +1081,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         mezzo_id = scanner.nextLong();
         Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
         System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
-    }
-
-        }
     }
 }
 
