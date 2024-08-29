@@ -71,11 +71,10 @@ public class Mezzo {
         this.bigliettiVidimati = bigliettiVidimati;
     }
 
-    public Mezzo(TipoMezzo tipoMezzo, String targa, int capienza, Tratta trattaAssegnata) {
+    public Mezzo(TipoMezzo tipoMezzo, String targa, int capienza) {
         this.tipoMezzo = tipoMezzo;
         this.targa = targa;
         this.capienza = capienza;
-        this.trattaAssegnata = trattaAssegnata;
     }
 
     public List<PercorsoEffettuato> getPercorsiEffettuati() {

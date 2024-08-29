@@ -36,4 +36,12 @@ public class PercorsoEffettuatoDAO {
         transaction.commit();
         System.out.println("il percorso effettuato con ID: " + id + " è stato rimosso correttamente");
     }
+
+    public Double avgPercorsiEffettuati (long mezzo_id){
+        String selezione = "SELECT AVG (a.tempoEffettivo) FROM PercorsoEffettuato a WHERE a.mezzo.id = :mezzo_id";
+        return em.createQuery(selezione,Double.class)
+                .setParameter("mezzo_id",mezzo_id)
+                .getSingleResult();
+    }
+
 }
