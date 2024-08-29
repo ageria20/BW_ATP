@@ -89,7 +89,7 @@ public class Tessera {
                 ", dataEmissione=" + dataEmissione +
                 ", dataScadenza=" + dataScadenza +
                 ", biglietti=" + biglietti +
-                ", abbonamenti=" + abbonamenti +
+                //", abbonamenti=" + abbonamenti +
                 ", utente= ID: " + utente.getId() +" di nome e cognome: "+utente.getNome()+" "+utente.getCognome()+", nato il: "+utente.getDataDiNascita()+
                 '}';
     }

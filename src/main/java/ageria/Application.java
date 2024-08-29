@@ -28,7 +28,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         EntityManager em = emf.createEntityManager();
-
         //qui mettiamo i DAO
         PuntodiEmissioneDAO peD = new PuntodiEmissioneDAO(em);
         AbbonamentoDAO abbonamentoDAO = new AbbonamentoDAO(em);
@@ -64,7 +63,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     break;
 
                 case 2:
-                    inputAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO);
+                    opzioneAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO, tesseraDAO, bigliettoDAO, abbonamentoDAO,bigliettoVidimatoDAO,utenteDAO);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -72,17 +71,29 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 default:
                     System.out.println("Opzione non valida. Riprova.");
             }
-            System.out.println("TUTTO OK!");
             em.close();
             emf.close();
         }
     }
-
-    //Lato utente
+    public static void opzioneAdmin(Scanner scanner,TrattaDAO trattaDAO,PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO peD,MezzoDAO mezzoDAO,TesseraDAO tesseraDAO,BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO,UtenteDAO utenteDAO){
+        while (true){
+            System.out.println("------------------------------------------------------");
+            System.out.println("Inserisci la password per avviare il MENU da ADMIN");
+            String password="admin";
+            String insertPassword=scanner.nextLine();
+            if (insertPassword.equals(password)){
+                inputAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO,tesseraDAO,utenteDAO,abbonamentoDAO,bigliettoDAO,bigliettoVidimatoDAO);
+            }else if(insertPassword.equals("sono scemo")){
+                break;
+            }else {
+                System.out.println("Password non valida,riprova o scrivi 'sono scemo' per tornare al menu principale");
+            }
+        }
+    }
     public static void inputUtente(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
-            System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
+            System.out.println("Premi 1 per CREARE una TESSERA");
             System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
             System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
             System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
@@ -133,6 +144,102 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
                     break;
                 case 7:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità tessera");
+                    verificaValiditàTessera(scanner,tesseraDAO);
+                    break;
+                case 0:
+                    System.out.println("Chiusura in corso...");
+                    return;
+                default:
+                    System.out.println("Opzione non valida. Riprova.");
+            }
+        }
+    }
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO,TesseraDAO tesseraDAO,UtenteDAO utenteDAO,AbbonamentoDAO abbonamentoDAO,BigliettoDAO bigliettoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
+        while (true) {
+            System.out.println("------------------------------------------------------");
+            System.out.println("premi 1 per CREARE una nuovo MEZZO");
+            System.out.println("premi 2 per CREARE una TRATTA");
+            System.out.println("premi 3 per AVVIARE un nuovo PERCORSO");
+            System.out.println("premi 4 per MONITORARE biglietti ed abbonamenti");
+            System.out.println("premi 5 per la MEDIA dei tempi effettivi  di un mezzo");
+            System.out.println("Premi 6 per CREARE una TESSERA");
+            System.out.println("Premi 7 per ACQUISIRE uno o più BIGLIETTI ");
+            System.out.println("Premi 8 per ACQUISIRE un ABBONAMENTO ");
+            System.out.println("Premi 9 per VERIFICARE la validità del ABBONAMENTO");
+            System.out.println("Premi 10 per RINNOVARE la TESSERA scaduta");
+            System.out.println("Premi 11 per VIDIMARE il biglietto");
+            System.out.println("Premi 12 per VERIFICARE la validità della TESSERA");
+            System.out.println("Premi 0 per USCIRE");
+            int sceltaAdmin = -1;
+            try {
+                sceltaAdmin = scanner.nextInt();
+                scanner.nextLine();
+                if (sceltaAdmin == -1) break;
+            } catch (InputMismatchException e) {
+                System.out.println("inserisci un numero valido!");
+                scanner.nextLine();
+                continue;
+            }
+            switch (sceltaAdmin) {
+                case 1:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Creazione del nuovo mezzo in corso...");
+                    creazioneMezzo(scanner, mezzoDAO);
+                    break;
+
+                case 2:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("scelta della tratta in corso...");
+                    creazioneTratta(scanner, trattaDAO);
+                    break;
+                case 3:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Avvio nuovo percorso in corso...");
+                    avviaPercorso(scanner,trattaDAO,percorsoEffettuatoDAO,mezzoDAO);
+                    break;
+                case 4:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
+                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO,mezzoDAO);
+                    break;
+                case 5:
+                    System.out.println("------------------------------------------------------");
+                    System.out.println("Calcolo media percorsi in avvio...");
+                    estraiMediaPercorsiTempiEffettivi(scanner, percorsoEffettuatoDAO);
+                    break;
+                case 6:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
+                    creazioneUtenteTessera(scanner, utenteDAO, tesseraDAO);
+                    break;
+                case 7:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto l'acquisto di uno o più biglietti");
+                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO);
+                    break;
+                case 8:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto l'acquisto di un abbonamento");
+                    acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
+                    break;
+                case 9:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità abbonamento");
+                    verificaValiditàAbbonamento(scanner,abbonamentoDAO);
+                    break;
+                case 10:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto rinnovare l'abbonamento");
+                    rinnovoTessera(scanner,tesseraDAO);
+                    break;
+                case 11:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto di vidimare il biglietto");
+                    vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
+                    break;
+                case 12:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità tessera");
                     verificaValiditàTessera(scanner,tesseraDAO);
@@ -468,8 +575,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         }
     }
     public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
-        long numeroTessera = -1;
-        while (numeroTessera == -1) {
+        long numeroTessera=-1;
+        while (numeroTessera==-1) {
             System.out.println("Inserire il numero di tessera associato all'abbonamento: ");
             if (scanner.hasNextLong()) {
                 try {
@@ -479,7 +586,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                         System.out.println("Nessun abbonamento trovato per la tessera inserita.");
                     } else {
                         for (Abbonamento abbonamento : abbonamentiPresenti) {
-                            System.out.println(abbonamento);
                             if (abbonamento.getDataScadenza().isAfter(LocalDate.now())) {
                                 System.out.println("L'abbonamento con ID: " + abbonamento.getId() + " è valido fino al: " + abbonamento.getDataScadenza());
                             } else {
@@ -544,12 +650,12 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 
         }
     }
-    public static void monitoraggioNBigliettiAbbonamenti (Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO) {
+    public static void monitoraggioNBigliettiAbbonamenti (Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO,MezzoDAO mezzoDAO) {
         while (true) {
             System.out.println("Premi 1 per MONITORARE i BIGLIETTI emessi in un determinato periodo");
             System.out.println("Premi 2 per MONITORARE gli ABBONAMENTI emessi in un determinato periodo");
             System.out.println("Premi 3 per MONITORARE il TOTALE BIGLIETTI/ABBONAMENTI emessi in un determinato periodo");
-            System.out.println("Premi 4 per MONITORARE i BIGLIETTI VIDIMATI in un determinato periodo");
+            System.out.println("Premi 4 per MONITORARE i BIGLIETTI VIDIMATI in un determinato MEZZO");
             System.out.println("Premi 0 per USCIRE");
             System.out.print("Scegli un'opzione: ");
             int sceltaUtente = -1;
@@ -577,8 +683,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 break;
               case 4:
                 System.out.println("-------------------------------------------------");
-
-
+                  conteggioBigliettiVidimatiSuUnMezzo(scanner,mezzoDAO);
+                  break;
               case 0:
                 System.out.println("Chiusura in corso...");
                 return;
@@ -723,8 +829,28 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     Long Totale=conteggioBiglietti+conteggioAbbonamenti;
     System.out.println("Gli ABBONAMENTI e BIGLIETTI TOTALI presenti in quel periodo sono: "+Totale+"!");
 }
-
-    //Lato Admin
+    public static void conteggioBigliettiVidimatiSuUnMezzo(Scanner scanner,MezzoDAO mezzoDAO){
+    long mezzoID=-1;
+    while (mezzoID == -1) {
+        System.out.println("Inserisci ID del MEZZO: ");
+        if (scanner.hasNextLong()) {
+            try {
+                mezzoID = scanner.nextLong();
+                Mezzo mezzo=mezzoDAO.findByID(mezzoID);
+                System.out.println("Il mezzo selezionato è: "+mezzo.getId()+" di tipo "+mezzo.getTipoMezzo());
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un valore valido");
+                scanner.next();
+            }
+        } else {
+            System.out.println("Inserire un numero valido");
+            scanner.next();
+        }
+    }
+    System.out.println("Conteggio biglietti vidimati in corso...");
+    Long conteggio=mezzoDAO.countBigliettiVidimatiPerMezzo(mezzoID);
+    System.out.println("Il numero dei biglietti vidimati sul mezzo selezionato è di: "+conteggio);
+}
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
@@ -879,62 +1005,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("Mezzo creato correttamente: " + mezzo);
 
     }
-    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO) {
-        while (true) {
-            System.out.println("------------------------------------------------------");
-            System.out.println("premi 1 per CREARE una nuovo MEZZO");
-            System.out.println("premi 2 per CREARE una TRATTA");
-            System.out.println("premi 3 per AVVIARE un nuovo PERCORSO");
-            System.out.println("premi 4 per MONITORARE biglietti ed abbonamenti");
-            System.out.println("premi 5 per la MEDIA dei tempi effettivi  di un mezzo");
-            System.out.println("Scegli un'opzione: ");
-            int sceltaAdmin = -1;
-            try {
-                sceltaAdmin = scanner.nextInt();
-                scanner.nextLine();
-                if (sceltaAdmin == -1) break;
-            } catch (InputMismatchException e) {
-                System.out.println("inserisci un numero valido!");
-                scanner.nextLine();
-                continue;
-            }
-            switch (sceltaAdmin) {
-                case 1:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Creazione del nuovo mezzo in corso...");
-                    creazioneMezzo(scanner, mezzoDAO);
-                    break;
-
-                case 2:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("scelta della tratta in corso...");
-                   creazioneTratta(scanner, trattaDAO);
-                    break;
-                case 3:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Avvio nuovo percorso in corso...");
-                    avviaPercorso(scanner,trattaDAO,percorsoEffettuatoDAO,mezzoDAO);
-                    break;
-                case 4:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
-                    monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO);
-                    break;
-                case 5:
-                    System.out.println("------------------------------------------------------");
-                    System.out.println("Calcolo media percorsi in avvio...");
-                    estraiMediaPercorsiTempiEffettivi(scanner, percorsoEffettuatoDAO);
-                    break;
-
-
-                case 0:
-                    System.out.println("Chiusura in corso...");
-                    return;
-                default:
-                    System.out.println("Opzione non valida. Riprova.");
-            }
-        }
-    }
     public static void avviaPercorso(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO, MezzoDAO mezzoDAO) {
 
         String partenzaInput = null;
@@ -1011,7 +1081,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
+    public static void getStatusMezzo(Scanner scanner, Mezzo mezzo, MezzoDAO mezzoDAO){
 
         System.out.println("Inserisci l'id del mezzo di cui vuoi informazioni");
         while(true) {
@@ -1042,14 +1112,29 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // si potrebbe creare un altro attributo in Stato Mezzo con l'enum Manutenzione
 
     }
-    public static void estraiMediaPercorsiTempiEffettivi (Scanner scanner,PercorsoEffettuatoDAO percorsoEffettuatoDAO){
-        long mezzo_id;
-
-        System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
-        mezzo_id = scanner.nextLong();
-        Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
-        System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
+    public static void estraiMediaPercorsiTempiEffettivi(Scanner scanner, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
+        long mezzo_id = -1;
+        try {
+            System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
+            mezzo_id = scanner.nextLong();
+            if (mezzo_id <= 0) {
+                System.out.println("Errore: l'ID del mezzo deve essere un numero positivo.");
+                return;
+            }
+            Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
+            if (mediaTempiPercorsi == null) {
+                System.out.println("Non sono stati trovati percorsi per il mezzo con ID " + mezzo_id);
+            } else {
+                System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Errore: è necessario inserire un numero intero valido per l'ID del mezzo.");
+            scanner.next();
+        } catch (Exception e) {
+            System.out.println("Si è verificato un errore imprevisto: " + e.getMessage());
+        }
     }
+
 }
 
 
