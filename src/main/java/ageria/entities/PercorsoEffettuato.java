@@ -3,7 +3,9 @@ package ageria.entities;
 
 import jakarta.persistence.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "percorso_effettuato")
@@ -17,15 +19,15 @@ public class PercorsoEffettuato {
     @JoinColumn(name = "percorsi_effettuati", nullable = false)
     private Mezzo mezzo;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tratta")
     private Tratta tratta;
 
     @Column(name = "data_inizio")
-    private LocalDate dataInizio;
+    private LocalDateTime dataInizio;
 
     @Column(name = "data_fine")
-    private LocalDate dataFine;
+    private LocalDateTime dataFine;
 
     @Column(name = "tempo_effettivo")
     private Long tempoEffettivo;
@@ -33,7 +35,8 @@ public class PercorsoEffettuato {
     public PercorsoEffettuato() {
     }
 
-    public PercorsoEffettuato(Mezzo mezzo, Tratta tratta, LocalDate dataInizio, LocalDate dataFine, Long tempoEffettivo) {
+    public PercorsoEffettuato(Mezzo mezzo, Tratta tratta, LocalDateTime dataInizio, LocalDateTime dataFine, Long tempoEffettivo) {
+
         this.mezzo = mezzo;
         this.tratta = tratta;
         this.dataInizio = dataInizio;
@@ -65,19 +68,19 @@ public class PercorsoEffettuato {
         this.tratta = tratta;
     }
 
-    public LocalDate getDataInizio() {
+    public LocalDateTime getDataInizio() {
         return dataInizio;
     }
 
-    public void setDataInizio(LocalDate dataInizio) {
+    public void setDataInizio(LocalDateTime dataInizio) {
         this.dataInizio = dataInizio;
     }
 
-    public LocalDate getDataFine() {
+    public LocalDateTime getDataFine() {
         return dataFine;
     }
 
-    public void setDataFine(LocalDate dataFine) {
+    public void setDataFine(LocalDateTime dataFine) {
         this.dataFine = dataFine;
     }
 
@@ -101,3 +104,6 @@ public class PercorsoEffettuato {
                 '}';
     }
 }
+
+
+
