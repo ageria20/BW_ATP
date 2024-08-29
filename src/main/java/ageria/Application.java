@@ -63,8 +63,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     break;
 
                 case 2:
-                    opzioneAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO);
-
+                    opzioneAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO, tesseraDAO, bigliettoDAO, abbonamentoDAO,bigliettoVidimatoDAO,utenteDAO);
                     break;
                 case 0:
                     System.out.println("Chiusura in corso...");
@@ -76,14 +75,14 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             emf.close();
         }
     }
-    public static void opzioneAdmin(Scanner scanner,TrattaDAO trattaDAO,PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO peD,MezzoDAO mezzoDAO){
+    public static void opzioneAdmin(Scanner scanner,TrattaDAO trattaDAO,PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO peD,MezzoDAO mezzoDAO,TesseraDAO tesseraDAO,BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO,UtenteDAO utenteDAO){
         while (true){
             System.out.println("------------------------------------------------------");
             System.out.println("Inserisci la password per avviare il MENU da ADMIN");
             String password="admin";
             String insertPassword=scanner.nextLine();
             if (insertPassword.equals(password)){
-                inputAdmin(scanner, trattaDAO, percorsoEffettuatoDAO,peD,mezzoDAO);
+                inputAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO,tesseraDAO,utenteDAO,abbonamentoDAO,bigliettoDAO,bigliettoVidimatoDAO);
             }else if(insertPassword.equals("sono scemo")){
                 break;
             }else {
@@ -94,7 +93,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     public static void inputUtente(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
-            System.out.println("Premi 1 per CREARE un nuovo UTENTE e relativa TESSERA");
+            System.out.println("Premi 1 per CREARE una TESSERA");
             System.out.println("Premi 2 per ACQUISIRE uno o più BIGLIETTI ");
             System.out.println("Premi 3 per ACQUISIRE un ABBONAMENTO ");
             System.out.println("Premi 4 per VERIFICARE la validità del ABBONAMENTO");
@@ -157,7 +156,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO) {
+    public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO,TesseraDAO tesseraDAO,UtenteDAO utenteDAO,AbbonamentoDAO abbonamentoDAO,BigliettoDAO bigliettoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
             System.out.println("premi 1 per CREARE una nuovo MEZZO");
@@ -165,7 +164,14 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("premi 3 per AVVIARE un nuovo PERCORSO");
             System.out.println("premi 4 per MONITORARE biglietti ed abbonamenti");
             System.out.println("premi 5 per la MEDIA dei tempi effettivi  di un mezzo");
-            System.out.println("Scegli un'opzione: ");
+            System.out.println("Premi 6 per CREARE una TESSERA");
+            System.out.println("Premi 7 per ACQUISIRE uno o più BIGLIETTI ");
+            System.out.println("Premi 8 per ACQUISIRE un ABBONAMENTO ");
+            System.out.println("Premi 9 per VERIFICARE la validità del ABBONAMENTO");
+            System.out.println("Premi 10 per RINNOVARE la TESSERA scaduta");
+            System.out.println("Premi 11 per VIDIMARE il biglietto");
+            System.out.println("Premi 12 per VERIFICARE la validità della TESSERA");
+            System.out.println("Premi 0 per USCIRE");
             int sceltaAdmin = -1;
             try {
                 sceltaAdmin = scanner.nextInt();
@@ -203,8 +209,41 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                     System.out.println("Calcolo media percorsi in avvio...");
                     estraiMediaPercorsiTempiEffettivi(scanner, percorsoEffettuatoDAO);
                     break;
-
-
+                case 6:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
+                    creazioneUtenteTessera(scanner, utenteDAO, tesseraDAO);
+                    break;
+                case 7:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto l'acquisto di uno o più biglietti");
+                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO);
+                    break;
+                case 8:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto l'acquisto di un abbonamento");
+                    acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
+                    break;
+                case 9:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità abbonamento");
+                    verificaValiditàAbbonamento(scanner,abbonamentoDAO);
+                    break;
+                case 10:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto rinnovare l'abbonamento");
+                    rinnovoTessera(scanner,tesseraDAO);
+                    break;
+                case 11:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto di vidimare il biglietto");
+                    vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
+                    break;
+                case 12:
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("Hai scelto verifica validità tessera");
+                    verificaValiditàTessera(scanner,tesseraDAO);
+                    break;
                 case 0:
                     System.out.println("Chiusura in corso...");
                     return;
