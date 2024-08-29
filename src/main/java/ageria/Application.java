@@ -1112,13 +1112,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         // si potrebbe creare un altro attributo in Stato Mezzo con l'enum Manutenzione
 
     }
-    public static void estraiMediaPercorsiTempiEffettivi (Scanner scanner,PercorsoEffettuatoDAO percorsoEffettuatoDAO){
-        long mezzo_id;
-
-        System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
-        mezzo_id = scanner.nextLong();
-        Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
-        System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
+    public static void estraiMediaPercorsiTempiEffettivi(Scanner scanner, PercorsoEffettuatoDAO percorsoEffettuatoDAO) {
+        long mezzo_id = -1;
+        try {
+            System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
+            mezzo_id = scanner.nextLong();
+            if (mezzo_id <= 0) {
+                System.out.println("Errore: l'ID del mezzo deve essere un numero positivo.");
+                return;
+            }
+            Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
+            if (mediaTempiPercorsi == null) {
+                System.out.println("Non sono stati trovati percorsi per il mezzo con ID " + mezzo_id);
+            } else {
+                System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Errore: è necessario inserire un numero intero valido per l'ID del mezzo.");
+            scanner.next();
+        } catch (Exception e) {
+            System.out.println("Si è verificato un errore imprevisto: " + e.getMessage());
+        }
     }
 }
 
