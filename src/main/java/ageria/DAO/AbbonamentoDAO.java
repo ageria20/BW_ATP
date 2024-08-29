@@ -45,9 +45,6 @@ public class AbbonamentoDAO {
         TypedQuery<Abbonamento> query=em.createQuery(selezione,
                 Abbonamento.class);
         query.setParameter("numeroTessera",numeroTessera);
-        if (query.getResultList().isEmpty()) {
-            throw new NotFoundEx();
-        }
         return query.getResultList();
     }
 }
