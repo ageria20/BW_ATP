@@ -87,7 +87,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }else if(insertPassword.equals("sono scemo")){
                 break;
             }else {
-                System.out.println("Password non valida,riprova o scrivi 'sono gay' per tornare al menu principale");
+                System.out.println("Password non valida,riprova o scrivi 'sono scemo' per tornare al menu principale");
             }
         }
     }
