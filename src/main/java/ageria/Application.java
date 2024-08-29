@@ -79,7 +79,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     }
 
     //Lato utente
-
     public static void inputUtente(Scanner scanner, UtenteDAO utenteDAO, TesseraDAO tesseraDAO, PuntodiEmissioneDAO puntodiEmissioneDAO, BigliettoDAO bigliettoDAO, AbbonamentoDAO abbonamentoDAO, MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
             System.out.println("------------------------------------------------------");
@@ -726,7 +725,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
 }
 
     //Lato Admin
-
     public static Tratta creazioneTratta(Scanner scanner, TrattaDAO trattaDAO){
         String zonaDiPartenza = null;
         String capolinea = null;
@@ -1052,7 +1050,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
         System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
     }
-
 }
 
 
