@@ -1205,25 +1205,23 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             try {
                 System.out.println("Inserisci ID del mezzo su cui calcolare la media del tempo effettivo: ");
                 mezzo_id = scanner.nextLong();
-                scanner.nextLine(); // Consuma il newline rimasto
-
+                scanner.nextLine();
                 if (mezzo_id <= 0) {
                     System.out.println("Errore: l'ID del mezzo deve essere un numero positivo.");
-                    continue; // Richiede nuovamente l'inserimento dell'ID
+                    continue;
                 }
 
-                // Estrae la media dei tempi dei percorsi effettuati
                 Double mediaTempiPercorsi = percorsoEffettuatoDAO.avgPercorsiEffettuati(mezzo_id);
                 if (mediaTempiPercorsi == null) {
                     System.out.println("Non sono stati trovati percorsi per il mezzo con ID " + mezzo_id);
                 } else {
                     System.out.println("La media del tempo effettivo del mezzo selezionato è: " + mediaTempiPercorsi);
                 }
-                break; // Esce dal ciclo se tutto è andato bene
+                break;
 
             } catch (InputMismatchException e) {
                 System.out.println("Errore: è necessario inserire un numero intero valido per l'ID del mezzo.");
-                scanner.next(); // Consuma l'input non valido
+                scanner.next();
             } catch (Exception e) {
                 System.out.println("Si è verificato un errore imprevisto: " + e.getMessage());
             }
