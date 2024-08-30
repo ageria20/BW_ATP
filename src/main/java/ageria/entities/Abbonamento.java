@@ -88,7 +88,7 @@ public class Abbonamento {
                 ", dataInizio=" + dataInizio +
                 ", dataScadenza=" + dataScadenza +
                // ", puntoEmissione=" + puntoEmissione +
-               ", tessera=" + tessera +
+               ", tessera con ID=" + tessera.getNumeroTessera()+", appartenente all'utente di nome e cognome: "+tessera.getUtente().getNome()+" "+tessera.getUtente().getCognome()+
                 '}';
     }
 }

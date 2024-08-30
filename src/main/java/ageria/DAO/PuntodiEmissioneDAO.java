@@ -27,13 +27,11 @@ public class PuntodiEmissioneDAO {
     }
     public PuntodiEmissione findByID(long id) {
         PuntodiEmissione found = em.find(PuntodiEmissione.class, id);
-        if (found == null) throw new NotFoundEx(id);
         return found;
     }
 
     public void delete(long id) {
         PuntodiEmissione found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);
