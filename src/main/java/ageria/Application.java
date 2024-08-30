@@ -158,19 +158,21 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     }
     public static void inputAdmin(Scanner scanner, TrattaDAO trattaDAO, PercorsoEffettuatoDAO percorsoEffettuatoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO, MezzoDAO mezzoDAO,TesseraDAO tesseraDAO,UtenteDAO utenteDAO,AbbonamentoDAO abbonamentoDAO,BigliettoDAO bigliettoDAO,BigliettoVidimatoDAO bigliettoVidimatoDAO) {
         while (true) {
-            System.out.println("------------------------------------------------------");
+            System.out.println("------------------ GESTIONE MEZZI E TRATTE ------------------");
             System.out.println("premi 1 per CREARE una nuovo MEZZO");
-            System.out.println("premi 2 per CREARE una TRATTA");
-            System.out.println("premi 3 per AVVIARE un nuovo PERCORSO");
-            System.out.println("premi 4 per MONITORARE biglietti ed abbonamenti");
-            System.out.println("premi 5 per la MEDIA dei tempi effettivi  di un mezzo");
-            System.out.println("Premi 6 per CREARE una TESSERA");
-            System.out.println("Premi 7 per ACQUISIRE uno o più BIGLIETTI ");
-            System.out.println("Premi 8 per ACQUISIRE un ABBONAMENTO ");
-            System.out.println("Premi 9 per VERIFICARE la validità del ABBONAMENTO");
-            System.out.println("Premi 10 per RINNOVARE la TESSERA scaduta");
-            System.out.println("Premi 11 per VIDIMARE il biglietto");
-            System.out.println("Premi 12 per VERIFICARE la validità della TESSERA");
+            System.out.println("premi 2 per GESTIRE lo stato di un mezzo");
+            System.out.println("premi 3 per CREARE una TRATTA");
+            System.out.println("premi 4 per AVVIARE un nuovo PERCORSO");
+            System.out.println("premi 5 per MONITORARE biglietti ed abbonamenti");
+            System.out.println("premi 6 per la MEDIA dei tempi effettivi  di un mezzo");
+            System.out.println("------------------ GESTIONE BIGLIETTI ------------------");
+            System.out.println("Premi 7 per CREARE una TESSERA");
+            System.out.println("Premi 8 per ACQUISIRE uno o più BIGLIETTI ");
+            System.out.println("Premi 9 per ACQUISIRE un ABBONAMENTO ");
+            System.out.println("Premi 10 per VERIFICARE la validità del ABBONAMENTO");
+            System.out.println("Premi 11 per RINNOVARE la TESSERA scaduta");
+            System.out.println("Premi 12 per VIDIMARE il biglietto");
+            System.out.println("Premi 13 per VERIFICARE la validità della TESSERA");
             System.out.println("Premi 0 per USCIRE");
             int sceltaAdmin = -1;
             try {
@@ -185,61 +187,67 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             switch (sceltaAdmin) {
                 case 1:
                     System.out.println("------------------------------------------------------");
-                    System.out.println("Creazione del nuovo mezzo in corso...");
+                    System.out.println("Creazione del NUOVO mezzo in corso...");
                     creazioneMezzo(scanner, mezzoDAO);
                     break;
 
                 case 2:
                     System.out.println("------------------------------------------------------");
+                    System.out.println("Creazione delLO STATO del mezzo in corso...");
+                    creazioneStatoMezzo(scanner,mezzoDAO);
+                    break;
+
+                case 3:
+                    System.out.println("------------------------------------------------------");
                     System.out.println("scelta della tratta in corso...");
                     creazioneTratta(scanner, trattaDAO);
                     break;
-                case 3:
+                case 4:
                     System.out.println("------------------------------------------------------");
                     System.out.println("Avvio nuovo percorso in corso...");
                     avviaPercorso(scanner,trattaDAO,percorsoEffettuatoDAO,mezzoDAO);
                     break;
-                case 4:
+                case 5:
                     System.out.println("------------------------------------------------------");
                     System.out.println("Menu MONITORAGGIO BIGLIETTI ED ABBONAMENTI in apertura...");
                     monitoraggioNBigliettiAbbonamenti(scanner,puntodiEmissioneDAO,mezzoDAO);
                     break;
-                case 5:
+                case 6:
                     System.out.println("------------------------------------------------------");
                     System.out.println("Calcolo media percorsi in avvio...");
                     estraiMediaPercorsiTempiEffettivi(scanner, percorsoEffettuatoDAO);
                     break;
-                case 6:
+                case 7:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Creazione nuovo Utente e associazione Tessera in corso...");
                     creazioneUtenteTessera(scanner, utenteDAO, tesseraDAO);
                     break;
-                case 7:
+                case 8:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
                     acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO);
                     break;
-                case 8:
+                case 9:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di un abbonamento");
                     acquistoAbbonamento(scanner, tesseraDAO,puntodiEmissioneDAO,abbonamentoDAO);
                     break;
-                case 9:
+                case 10:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità abbonamento");
                     verificaValiditàAbbonamento(scanner,abbonamentoDAO);
                     break;
-                case 10:
+                case 11:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto rinnovare l'abbonamento");
                     rinnovoTessera(scanner,tesseraDAO);
                     break;
-                case 11:
+                case 12:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto di vidimare il biglietto");
                     vidimazioneBiglietto(mezzoDAO,bigliettoVidimatoDAO,scanner,bigliettoDAO);
                     break;
-                case 12:
+                case 13:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto verifica validità tessera");
                     verificaValiditàTessera(scanner,tesseraDAO);
@@ -898,8 +906,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         return tratta;
 
     }
-    public static void creazioneStatoMezzo(Scanner scanner, Mezzo mezzo){
-         // Presupponiamo che l'oggetto Mezzo esista già e sia stato inizializzato
+    public static void creazioneStatoMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
+        // Presupponiamo che l'oggetto Mezzo esista già e sia stato inizializzato
         Manutenzione stato = null;
         LocalDate dataInizio = null;
         LocalDate dataFine = null;
@@ -945,13 +953,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
+        // Ricerca e modifica dello stato del mezzo
+        Mezzo mezzo = null;
+        while (mezzo == null) {
+            try {
+                System.out.println("Inserisci l'ID del mezzo da modificare lo stato:");
+                long mezzo_id = scanner.nextLong();
+                scanner.nextLine();  // Pulisci l'input dopo aver letto l'ID
 
-        // Creazione dell'oggetto StatoMezzo
-        StatoMezzo statoMezzo = new StatoMezzo(mezzo, stato, dataInizio, dataFine);
-
-
-        // Stampa l'oggetto creato
-        System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
+                mezzo = mezzoDAO.findByID(mezzo_id);
+                if (mezzo == null) {
+                    System.out.println("Mezzo non trovato! Riprovare con un altro ID.");
+                } else {
+                    // Creazione del nuovo oggetto StatoMezzo
+                    StatoMezzo statoMezzo = new StatoMezzo(mezzo, stato, dataInizio, dataFine);
+                    System.out.println("Oggetto StatoMezzo creato: " + statoMezzo);
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: Inserisci un ID numerico valido.");
+                scanner.nextLine();  // Pulisce l'input buffer in caso di errore
+            }
+        }
     }
     public static void creazioneMezzo(Scanner scanner, MezzoDAO mezzoDAO) {
 

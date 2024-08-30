@@ -73,7 +73,7 @@ public class StatoMezzo {
     @Override
     public String toString() {
         return "StatoMezzo{" +
-                "mezzo=" + mezzo +
+                "mezzo=" + mezzo.getId() +
                 ", stato=" + stato +
                 ", dataInizio=" + dataInizio +
                 ", dataFine=" + dataFine +
