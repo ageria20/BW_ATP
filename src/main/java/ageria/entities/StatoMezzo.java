@@ -42,6 +42,12 @@ public class StatoMezzo {
         return mezzo;
     }
 
+    public long getId() {
+        return id;
+    }
+
+
+
     public void setMezzo(Mezzo mezzo) {
         this.mezzo = mezzo;
     }

@@ -49,5 +49,25 @@ public class MezzoDAO {
         query.setParameter("mezzoId", mezzoId);
         return query.getSingleResult();
     }
+    public void updateStatoMezzo(StatoMezzo statoMezzo) {
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
 
+            // Se lo stato esiste già, lo aggiorna; altrimenti, lo aggiunge come nuovo
+            if (statoMezzo.getId() > 0) {
+                em.merge(statoMezzo);
+            } else {
+                em.persist(statoMezzo);
+            }
+
+            transaction.commit();
+            System.out.println("Lo stato del mezzo con ID: " + statoMezzo.getMezzo().getId() + " è stato aggiornato.");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            System.err.println("Errore durante l'aggiornamento dello stato del mezzo: " + e.getMessage());
+        }
+    }
 }
