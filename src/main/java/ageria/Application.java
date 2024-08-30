@@ -595,23 +595,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        if (puntoEmissione != null) {
-            System.out.println("Inserisci numero di tessera dove caricare i biglietti: ");
-            long numeroTessera = scanner.nextLong();
-            scanner.nextLine();
-            Tessera tessera = tesseraDAO.findByID(numeroTessera);
-            System.out.println("tessera: " + tessera);
-
+        Tessera tessera = null;
+        while (tessera == null) {
+            try {
+                System.out.println("Inserisci numero di tessera dove caricare i biglietti: ");
+                long numeroTessera = scanner.nextLong();
+                scanner.nextLine();
+                tessera = tesseraDAO.findByID(numeroTessera);
+                if (tessera == null) {
+                    System.out.println("Errore: tessera con ID: " + numeroTessera + " non trovata nel database. Riprova con un altro ID.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero di tessera valido.");
+                scanner.next();
+            }
+        }
             System.out.println("Caricamento Biglietto/i in corso...");
-            //Biglietto[] biglietti=new Biglietto[numeroBiglietti];
             for (int i = 0; i < numeroBiglietti; i++) {
                  Biglietto biglietto = new Biglietto(puntoEmissione, tessera);
                  bigliettoDAO.save(biglietto);
                 System.out.println("Biglietto " + (i + 1) + " creato.");
             }
-        } else {
-            System.out.println("Non è stato selezionato un punto di emissione valido.");
-        }
     }
     public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
         long numeroTessera=-1;
