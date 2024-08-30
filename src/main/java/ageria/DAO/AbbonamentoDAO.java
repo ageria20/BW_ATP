@@ -26,13 +26,13 @@ public class AbbonamentoDAO {
     }
     public Abbonamento findByID(long id) {
         Abbonamento found = em.find(Abbonamento.class, id);
-        if (found == null) throw new NotFoundEx(id);
+
         return found;
     }
 
     public void delete(long id) {
         Abbonamento found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);

@@ -121,7 +121,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 2:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO);
+                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO,puntodiEmissioneDAO);
                     break;
                 case 3:
                     System.out.println("-------------------------------------------------");
@@ -225,7 +225,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 case 8:
                     System.out.println("-------------------------------------------------");
                     System.out.println("Hai scelto l'acquisto di uno o più biglietti");
-                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO);
+                    acquistoBiglietto(scanner, tesseraDAO,bigliettoDAO,puntodiEmissioneDAO);
                     break;
                 case 9:
                     System.out.println("-------------------------------------------------");
@@ -408,114 +408,148 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("Che tipo di abbonamento hai intenzione di acquistare?");
             System.out.println("Premi 1 per quello Settimanale");
             System.out.println("Premi 2 per quello Mensile");
+            System.out.println("Premi 0 per tornare al menu precedente");
 
             try {
                 int sceltaAbbonamento = scanner.nextInt();
-                if (sceltaAbbonamento == 1) {
-                    tipoAbbonamento = AbbonamentoType.SETTIMANALE;
-                    dataScadenza = dataInizio.plusWeeks(1);
-                } else if (sceltaAbbonamento == 2) {
-                    tipoAbbonamento = AbbonamentoType.MENSILE;
-                    dataScadenza = dataInizio.plusMonths(1);
-                } else {
-                    System.out.println("Inserire un valore valido");
+                switch (sceltaAbbonamento) {
+                    case 1:
+                        tipoAbbonamento = AbbonamentoType.SETTIMANALE;
+                        dataScadenza = dataInizio.plusWeeks(1);
+                        break;
+                    case 2:
+                        tipoAbbonamento = AbbonamentoType.MENSILE;
+                        dataScadenza = dataInizio.plusMonths(1);
+                        break;
+                    case 0:
+                        System.out.println("Sei tornato nel menu precedente...");
+                        return;
+                    default:
+                        System.out.println("Errore: opzione non valida. Riprova.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Errore: inserisci un numero valido");
+                System.out.println("Errore: inserisci un'opzione valida (numerica).");
                 scanner.nextLine();
             }
         }
-
-        if (tipoAbbonamento != null) {
-            System.out.println("Hai scelto un abbonamento di tipo: " + tipoAbbonamento);
-        } else {
-            System.out.println("Non è stato selezionato un tipo di abbonamento valido.");
-        }
-
-
+        System.out.println("Hai scelto un abbonamento di tipo: " + tipoAbbonamento);
         System.out.println("Ora inserisci da dove stai acquistando:");
         System.out.println("Premi 1 se dal punto autorizzato");
         System.out.println("Premi 2 se dal distributore automatico");
 
         PuntodiEmissione puntoEmissione = null;
-        try {
-            if (scanner.hasNextInt()) {
+        while (puntoEmissione == null) {
+            try {
                 int sceltaPunto = scanner.nextInt();
-                if (sceltaPunto == 1) {
-                    puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
-                    puntodiEmissioneDAO.save(puntoEmissione);
-                } else if (sceltaPunto == 2) {
-                    puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
-                    puntodiEmissioneDAO.save(puntoEmissione);
-                } else {
-                    System.out.println("Inserire un valore valido");
+                switch (sceltaPunto) {
+                    case 1:
+                        puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
+                        puntodiEmissioneDAO.save(puntoEmissione);
+                        break;
+                    case 2:
+                        puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
+                        puntodiEmissioneDAO.save(puntoEmissione);
+                        break;
+                    default:
+                        System.out.println("Errore: inserisci un'opzione valida.");
                 }
-            } else {
-                System.out.println("Errore: inserisci un numero valido");
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un'opzione valida (numerica).");
                 scanner.nextLine();
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Errore: inserisci un numero valido");
-            scanner.nextLine();
         }
 
-        if (puntoEmissione != null) {
-            System.out.println("Inserisci numero di tessera dove attivare l'abbonamento scelto: ");
-            long numeroTessera = scanner.nextLong();
-            scanner.nextLine();
-            Tessera tessera = tesseraDAO.findByID(numeroTessera);
-            System.out.println("tessera: " + tessera);
-            Abbonamento abbonamento = new Abbonamento(tipoAbbonamento, dataInizio, dataScadenza, puntoEmissione, tessera);
-            abbonamentoDAO.save(abbonamento);
-            System.out.println("Abbonamento creato con successo!");
+        boolean tesseraValida = false;
+        Tessera tessera = null;
 
-            System.out.println(abbonamento);
-        } else {
-            System.out.println("Non è stato selezionato un punto di emissione valido.");
+        while (!tesseraValida) {
+            try {
+                System.out.println("Inserisci il numero di tessera dove attivare l'abbonamento scelto: ");
+                long numeroTessera = scanner.nextLong();
+                scanner.nextLine();
+                tessera = tesseraDAO.findByID(numeroTessera);
+                if (tessera == null) {
+                    System.out.println("Errore: tessera con ID: " + numeroTessera + " non trovata nel database. Riprova con un altro ID.");
+                }
+                else if (tessera.getDataScadenza().isAfter(LocalDate.now())){
+                    System.out.println("La tessera inserita è scaduta!");
+                    System.out.println("Rinnovo automatico in corso...");
+                    tessera.rinnovoAutomatico();
+                    System.out.println("Tessera con ID: "+tessera.getNumeroTessera()+" è stata rinnovata con successo!");
+                    System.out.println("Nuova data di scadenza: "+tessera.getDataScadenza());
+                    Abbonamento abbonamento = new Abbonamento(tipoAbbonamento, dataInizio, dataScadenza, puntoEmissione, tessera);
+                    abbonamentoDAO.save(abbonamento);
+                    System.out.println("Abbonamento creato con successo!");
+                    System.out.println(abbonamento);
+                    tesseraValida = true;
+                } else {
+                    Abbonamento abbonamento = new Abbonamento(tipoAbbonamento, dataInizio, dataScadenza, puntoEmissione, tessera);
+                    abbonamentoDAO.save(abbonamento);
+                    System.out.println("Abbonamento creato con successo!");
+                    System.out.println(abbonamento);
+                    tesseraValida = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero di tessera valido.");
+                scanner.nextLine();
+            }
         }
-
-
     }
     public static void vidimazioneBiglietto(MezzoDAO mezzoDAO, BigliettoVidimatoDAO bigliettoVidimatoDAO, Scanner scanner, BigliettoDAO bigliettoDAO) {
         while (true) {
-            try {
-                System.out.println("Hai scelto di vidimare un biglietto. Inserisci l'ID del biglietto per verificare che non sia già stato utilizzato:");
-                long bigliettoID = scanner.nextLong();
-                Biglietto biglietto = bigliettoDAO.findByID(bigliettoID);
+            boolean bigliettoValido = false;
+            while (!bigliettoValido) {
+                try {
+                    System.out.println("Hai scelto di vidimare un biglietto. Inserisci l'ID del biglietto per verificare che non sia già stato utilizzato: ");
+                    long bigliettoID = scanner.nextLong();
+                    scanner.nextLine();
+                    Biglietto biglietto = bigliettoDAO.findByID(bigliettoID);
+                    if (biglietto == null) {
+                        System.out.println("Errore: biglietto con ID: " + bigliettoID + " non trovato nel database. Riprova con un altro ID.");
+                    } else if (biglietto.isBigliettoVidimato()) {
+                        System.out.println("Questo biglietto è già stato vidimato.");
+                        System.out.println("Inserire un biglietto valido!");
+                    } else {
+                        boolean mezzoValido = false;
+                        while (!mezzoValido) {
+                            try {
+                                System.out.println("Inserisci la linea del mezzo in cui ti trovi:");
+                                long mezzoID = scanner.nextLong();
+                                scanner.nextLine();
+                                Mezzo mezzo = mezzoDAO.findByID(mezzoID);
+                                if (mezzo == null) {
+                                    System.out.println("Errore: mezzo con ID: " + mezzoID + " non trovato nel database. Riprova con un altro ID.");
+                                } else {
+                                    LocalDateTime oraVidimazione = LocalDateTime.now();
+                                    BigliettoVidimato bigliettoVidimato = new BigliettoVidimato(biglietto, mezzo, oraVidimazione);
 
-                if (biglietto.isBigliettoVidimato()) {
-                    System.out.println("Questo biglietto è già stato vidimato.");
-                    continue;
+                                    biglietto.vidimazione();
+                                    mezzo.setBigliettiValidati(mezzo.getBigliettiValidati() + 1);
+
+                                    bigliettoVidimatoDAO.save(bigliettoVidimato);
+                                    bigliettoDAO.save(biglietto);
+                                    mezzoDAO.save(mezzo);
+
+                                    System.out.println("Biglietto vidimato correttamente!");
+                                    mezzoValido = true;
+                                    bigliettoValido = true;
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Errore: inserisci un ID di mezzo valido.");
+                                scanner.nextLine();
+                            }
+                        }
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Errore: inserisci un ID di biglietto valido.");
+                    scanner.nextLine();
+                } catch (Exception e) {
+                    System.out.println("Si è verificato un errore: " + e.getMessage());
                 }
-
-                System.out.println("Inserisci la linea del mezzo in cui ti trovi:");
-                long mezzoID = scanner.nextLong();
-                Mezzo mezzo = mezzoDAO.findByID(mezzoID);
-
-                LocalDateTime oraVidimazione = LocalDateTime.now();
-                BigliettoVidimato bigliettoVidimato = new BigliettoVidimato(biglietto, mezzo, oraVidimazione);
-
-                biglietto.vidimazione();
-                mezzo.setBigliettiValidati(mezzo.getBigliettiValidati() + 1);
-
-                bigliettoVidimatoDAO.save(bigliettoVidimato);
-                bigliettoDAO.save(biglietto);
-                mezzoDAO.save(mezzo);
-                System.out.println("Biglietto vidimato correttamente!");
-                break;
-
-            } catch (InputMismatchException e) {
-                System.out.println("Inserisci un numero valido.");
-                scanner.nextLine();
-            } catch (NotFoundEx e) {
-                System.out.println("Elemento non trovato: " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("Si è verificato un errore: " + e.getMessage());
-                break;
             }
         }
     }
-    public static void acquistoBiglietto(Scanner scanner, TesseraDAO tesseraDAO,BigliettoDAO bigliettoDAO) {
+    public static void acquistoBiglietto(Scanner scanner,TesseraDAO tesseraDAO,BigliettoDAO bigliettoDAO,PuntodiEmissioneDAO puntodiEmissioneDAO) {
         int numeroBiglietti = 0;
         boolean inputValido = false;
 
@@ -541,18 +575,23 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             System.out.println("Ora inserisci da dove stai acquistando:");
             System.out.println("Premi 1 se dal punto autorizzato");
             System.out.println("Premi 2 se dal distributore automatico");
-
             try {
                 if (scanner.hasNextInt()) {
                     int sceltaPunto = scanner.nextInt();
-                    if (sceltaPunto == 1) {
-                        puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
-                        inputValido = true;
-                    } else if (sceltaPunto == 2) {
-                        puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
-                        inputValido = true;
-                    } else {
-                        System.out.println("Inserire un valore valido");
+                    switch (sceltaPunto) {
+                        case 1:
+                            puntoEmissione = new RivenditoreAutorizzato("Tabaccheria n1", "Via Mario Rossi 2", RivenditoreType.TABACCHERIA);
+                            puntodiEmissioneDAO.save(puntoEmissione);
+                            inputValido = true;
+                            break;
+                        case 2:
+                            puntoEmissione = new DistributoreAutomatico("Distributore n1", "Stazione Termini", true);
+                            puntodiEmissioneDAO.save(puntoEmissione);
+                            inputValido = true;
+                            break;
+                        default:
+                            System.out.println("Inserire un valore valido");
+                            break;
                     }
                 } else {
                     System.out.println("Errore: inserisci un numero valido");
@@ -564,23 +603,27 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
 
-        if (puntoEmissione != null) {
-            System.out.println("Inserisci numero di tessera dove caricare i biglietti: ");
-            long numeroTessera = scanner.nextLong();
-            scanner.nextLine();
-            Tessera tessera = tesseraDAO.findByID(numeroTessera);
-            System.out.println("tessera: " + tessera);
-
+        Tessera tessera = null;
+        while (tessera == null) {
+            try {
+                System.out.println("Inserisci numero di tessera dove caricare i biglietti: ");
+                long numeroTessera = scanner.nextLong();
+                scanner.nextLine();
+                tessera = tesseraDAO.findByID(numeroTessera);
+                if (tessera == null) {
+                    System.out.println("Errore: tessera con ID: " + numeroTessera + " non trovata nel database. Riprova con un altro ID.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Errore: inserisci un numero di tessera valido.");
+                scanner.next();
+            }
+        }
             System.out.println("Caricamento Biglietto/i in corso...");
-            //Biglietto[] biglietti=new Biglietto[numeroBiglietti];
             for (int i = 0; i < numeroBiglietti; i++) {
-                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera,true);
+                 Biglietto biglietto = new Biglietto(puntoEmissione, tessera);
                  bigliettoDAO.save(biglietto);
                 System.out.println("Biglietto " + (i + 1) + " creato.");
             }
-        } else {
-            System.out.println("Non è stato selezionato un punto di emissione valido.");
-        }
     }
     public static void verificaValiditàAbbonamento(Scanner scanner,AbbonamentoDAO abbonamentoDAO){
         long numeroTessera=-1;
