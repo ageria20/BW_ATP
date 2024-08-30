@@ -79,7 +79,7 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         while (true){
             System.out.println("------------------------------------------------------");
             System.out.println("Inserisci la password per avviare il MENU da ADMIN");
-            String password="admin";
+            String password="*****";
             String insertPassword=scanner.nextLine();
             if (insertPassword.equals(password)){
                 inputAdmin(scanner,trattaDAO,percorsoEffettuatoDAO,peD,mezzoDAO,tesseraDAO,utenteDAO,abbonamentoDAO,bigliettoDAO,bigliettoVidimatoDAO);
@@ -835,8 +835,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
         System.out.println("I biglietti presenti in periodo è: "+conteggioBiglietti+"!");
 }
     public static void conteggioAbbonamentiEmessi(Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO){
-    long puntoEmissioneID=-1;
-    while (puntoEmissioneID == -1) {
+       long puntoEmissioneID=-1;
+       while (puntoEmissioneID == -1) {
         System.out.println("Inserisci ID del punto di Emissione: ");
         if (scanner.hasNextLong()) {
             try {
@@ -863,8 +863,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     System.out.println("Gli ABBONAMENTI presenti in quel periodo sono: "+conteggioAbbonamenti+"!");
 }
     public static void conteggioBigliettiEAbbonamentiTotali(Scanner scanner,PuntodiEmissioneDAO puntodiEmissioneDAO){
-    long puntoEmissioneID=-1;
-    while (puntoEmissioneID == -1) {
+      long puntoEmissioneID=-1;
+      while (puntoEmissioneID == -1) {
         System.out.println("Inserisci ID del punto di Emissione: ");
         if (scanner.hasNextLong()) {
             try {
@@ -893,8 +893,8 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
     System.out.println("Gli ABBONAMENTI e BIGLIETTI TOTALI presenti in quel periodo sono: "+Totale+"!");
 }
     public static void conteggioBigliettiVidimatiSuUnMezzo(Scanner scanner,MezzoDAO mezzoDAO){
-    long mezzoID=-1;
-    while (mezzoID == -1) {
+      long mezzoID=-1;
+      while (mezzoID == -1) {
         System.out.println("Inserisci ID del MEZZO: ");
         if (scanner.hasNextLong()) {
             try {
@@ -1246,7 +1246,6 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
             }
         }
     }
-
 }
 
 
