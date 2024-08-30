@@ -604,6 +604,12 @@ private static EntityManagerFactory emf = Persistence.createEntityManagerFactory
                 tessera = tesseraDAO.findByID(numeroTessera);
                 if (tessera == null) {
                     System.out.println("Errore: tessera con ID: " + numeroTessera + " non trovata nel database. Riprova con un altro ID.");
+                }else if (tessera.getDataScadenza().isAfter(LocalDate.now())){
+                    System.out.println("La tessera inserita è scaduta!");
+                    System.out.println("Rinnovo automatico in corso...");
+                    tessera.rinnovoAutomatico();
+                    System.out.println("Tessera con ID: "+tessera.getNumeroTessera()+" è stata rinnovata con successo!");
+                    System.out.println("Nuova data di scadenza: "+tessera.getDataScadenza());
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Errore: inserisci un numero di tessera valido.");
