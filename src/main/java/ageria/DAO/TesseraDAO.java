@@ -22,13 +22,11 @@ public class TesseraDAO {
     }
     public Tessera findByID(long id) {
         Tessera found = em.find(Tessera.class, id);
-        if (found == null) throw new NotFoundEx(id);
         return found;
     }
 
     public void delete(long id) {
         Tessera found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);

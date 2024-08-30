@@ -23,13 +23,13 @@ public class PercorsoEffettuatoDAO {
 
     public PercorsoEffettuato findByID(long id) {
         PercorsoEffettuato found = em.find(PercorsoEffettuato.class, id);
-        if (found == null) throw new NotFoundEx(id);
+
         return found;
     }
 
     public void delete(long id) {
         PercorsoEffettuato found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);

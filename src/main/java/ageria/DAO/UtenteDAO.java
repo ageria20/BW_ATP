@@ -22,13 +22,12 @@ public class UtenteDAO {
     }
     public Utente findByID(long id) {
         Utente found = em.find(Utente.class, id);
-        if (found == null) throw new NotFoundEx(id);
+
         return found;
     }
 
     public void delete(long id) {
         Utente found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);

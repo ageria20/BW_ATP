@@ -20,13 +20,13 @@ public class BigliettoDAO {
     }
     public Biglietto findByID(long id) {
         Biglietto found = em.find(Biglietto.class, id);
-        if (found == null) throw new NotFoundEx(id);
+
         return found;
     }
 
     public void delete(long id) {
         Biglietto found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);

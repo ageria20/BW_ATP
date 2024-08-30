@@ -23,13 +23,13 @@ public class TrattaDAO {
 
     public Tratta findByID(long id) {
         Tratta found = em.find(Tratta.class, id);
-        if (found == null) throw new NotFoundEx(id);
+
         return found;
     }
 
     public void delete(long id) {
         Tratta found = this.findByID(id);
-        if (found == null) throw new NotFoundEx(id);
+
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.remove(found);

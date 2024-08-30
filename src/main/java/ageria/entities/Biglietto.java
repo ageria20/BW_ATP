@@ -28,18 +28,13 @@ public class Biglietto {
     public Biglietto() {
     }
 
-    public Biglietto( PuntodiEmissione puntoEmissione, Tessera tessera,boolean bigliettoVidimato) {
+    public Biglietto( PuntodiEmissione puntoEmissione, Tessera tessera) {
 
         this.puntoEmissione = puntoEmissione;
         this.tessera = tessera;
-        this.bigliettoVidimato = bigliettoVidimato;
+        this.bigliettoVidimato = false;
     }
 
-    public Biglietto(PuntodiEmissione puntoDiEmissione, Tessera tessera) {
-
-        this.puntoEmissione = puntoDiEmissione;
-        this.tessera = tessera;
-    }
 
     public long getId() {
         return id;
